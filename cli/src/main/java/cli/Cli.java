@@ -40,7 +40,8 @@ public class Cli {
             // Call MuRa
             List<Mutant> rankedMutants = MuRa.rankMutants(cmd.getOptionValue("config"));
 
-            System.out.println(rankedMutants.size());
+            // Generate report
+            ReportGenerator.generateReport(rankedMutants, ".");
 
         } catch (Exception e) {
             System.out.println("MuRa caught an exception: " + e.getMessage());
