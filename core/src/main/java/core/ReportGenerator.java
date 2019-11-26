@@ -1,4 +1,4 @@
-package cli;
+package core;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -34,7 +34,7 @@ public class ReportGenerator {
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("mutants", mutants);
 
-        Writer fileWriter = new FileWriter(new File("output.html"));
+        Writer fileWriter = new FileWriter(new File("index.html"));
         try {
             template.process(templateData, fileWriter);
         } catch (TemplateException e) {

@@ -28,8 +28,8 @@
         </thead>
         <tbody>
         <#list mutants as mutant>
-            <tr>
-                <td>1.0</td>
+            <tr <#if mutant.survived()> class="table-success" <#else> class="table-danger" </#if>>
+                <td>${mutant.score}</td>
                 <td>${mutant.mutatedClass}</td>
                 <td data-toggle="tooltip" data-delay="500" data-placement="top" title="${mutant.notes}">${mutant.mutator}</td>
                 <td>${mutant.originalFile}:${mutant.lineNr}</td>

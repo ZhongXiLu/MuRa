@@ -1,15 +1,21 @@
-package cli;
+package pitest;
 
 import core.MuRa;
+import core.RankedMutant;
+import core.ReportGenerator;
+import lumutator.Configuration;
 import lumutator.Mutant;
 import org.apache.commons.cli.*;
 
+import java.nio.file.Paths;
 import java.util.List;
 
+import static pitest.Parser.getMutantsWithMutantType;
+
 /**
- * Main class.
+ * Main class: uses MuRa with PITest.
  */
-public class Cli {
+public class PITest {
 
     public static void main(String[] args) {
 
@@ -37,8 +43,19 @@ public class Cli {
                 return;
             }
 
+            // Explicitly initialize configuration (which is needed by the PITest parser)
+            Configuration.getInstance().initialize(cmd.getOptionValue("config"));
+            Configuration config = Configuration.getInstance();
+
+            // Parse PITest mutants
+            List<Mutant> mutants = getMutantsWithMutantType(cmd.hasOption("mutants") ?
+                            cmd.getOptionValue("mutants") :
+                            Paths.get(config.get("projectDir"), "target", "pit-reports").toString(),
+                    false, RankedMutant.class
+            );
+
             // Call MuRa
-            List<Mutant> rankedMutants = MuRa.rankMutants(cmd.getOptionValue("config"));
+            List<Mutant> rankedMutants = MuRa.rankMutants(mutants, cmd.getOptionValue("config"));
 
             // Generate report
             ReportGenerator.generateReport(rankedMutants, ".");
