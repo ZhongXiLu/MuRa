@@ -33,6 +33,7 @@ public class ReportGenerator {
 
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("mutants", mutants);
+        templateData.put("rankers", ((RankedMutant) mutants.get(0)).getRankCoefficients());
 
         Writer fileWriter = new FileWriter(new File("index.html"));
         try {

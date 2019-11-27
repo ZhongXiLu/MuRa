@@ -21,18 +21,20 @@
         <thead class="thead-dark">
         <tr>
             <th>Score</th>
-            <th>Mutated Class</th>
+            <th>Mutated Method</th>
             <th>Mutator</th>
-            <th>Location</th>
         </tr>
         </thead>
         <tbody>
         <#list mutants as mutant>
             <tr <#if mutant.survived()> class="table-success" <#else> class="table-danger" </#if>>
-                <td>${mutant.score}</td>
-                <td>${mutant.mutatedClass}</td>
+                <td>${mutant.getScore()}</td>
+                <#if mutant.mutatedMethod == "<init>">
+                    <td>${mutant.mutatedClass}.&lt;init&gt;</td>
+                <#else>
+                    <td>${mutant.mutatedClass}.${mutant.mutatedMethod}</td>
+                </#if>
                 <td data-toggle="tooltip" data-delay="500" data-placement="top" title="${mutant.notes}">${mutant.mutator}</td>
-                <td>${mutant.originalFile}:${mutant.lineNr}</td>
             </tr>
         </#list>
         </tbody>
@@ -55,7 +57,9 @@
         $('[data-toggle="tooltip"]').tooltip()
     });
     $(document).ready(function () {
-        $('#mutants').DataTable();
+        $('#mutants').DataTable({
+            "order": [[0, "desc"]]  // sort score in descending
+        });
     });
 </script>
 

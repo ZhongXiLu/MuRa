@@ -1,5 +1,6 @@
 package core;
 
+import core.rankers.complexity.ComplexityRanker;
 import lumutator.Configuration;
 import lumutator.Mutant;
 
@@ -22,7 +23,7 @@ public class MuRa {
         Configuration.getInstance().initialize(configFile);
         Configuration config = Configuration.getInstance();
 
-        // TODO: ...
+        ComplexityRanker.rank(mutants, config.get("classFiles"));
 
         return mutants;
     }
