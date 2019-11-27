@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <classFiles>target/test-classes/bank/target/classes</classFiles>
+    <projectDir>target/test-classes/bank/</projectDir>
+    <sourcePath>src/main/java/</sourcePath>
+</configuration>

@@ -41,14 +41,18 @@ public class RankedMutant extends Mutant {
      * @return The score.
      */
     public double getScore() {
-        double score = 0.0;
 
-        final double coeffWeight = 1.0 / rankCoefficients.size();
-        for (Pair<Double, String> coeff : rankCoefficients) {
-            score += coeffWeight * coeff.getLeft();
+        if (rankCoefficients.isEmpty()) {
+            return 1.0;
+
+        } else {
+            double score = 0.0;
+            final double coeffWeight = 1.0 / rankCoefficients.size();
+            for (Pair<Double, String> coeff : rankCoefficients) {
+                score += coeffWeight * coeff.getLeft();
+            }
+            return score;
         }
-
-        return score;
     }
 
     /**

@@ -16,13 +16,12 @@ public class ComplexityRanker {
     /**
      * Rank mutants based on their complexity.
      *
-     * @param mutants   List of mutants that needs to be ranked.
-     * @param sourceDir Directory that contains all the source files.
+     * @param mutants    List of mutants that needs to be ranked.
+     * @param classesDir Directory that contains all the class files.
      */
-    public static void rank(List<Mutant> mutants, String sourceDir) throws IOException {
+    public static void rank(List<Mutant> mutants, String classesDir) throws IOException {
 
-        System.out.println(new File(sourceDir).getCanonicalPath());
-        List<File> files = (List<File>) FileUtils.listFiles(new File(sourceDir), new String[]{"class"}, true);
+        List<File> files = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
 
         CoverageRunner coverageRunner = new CoverageRunner();
         coverageRunner.runCoverage(files);
