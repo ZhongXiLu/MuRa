@@ -1,6 +1,7 @@
 package core;
 
 import core.rankers.complexity.ComplexityRanker;
+import core.rankers.usage.UsageCalculator;
 import lumutator.Configuration;
 import lumutator.Mutant;
 
@@ -24,6 +25,7 @@ public class MuRa {
         Configuration config = Configuration.getInstance();
 
         ComplexityRanker.rank(mutants, config.get("classFiles"));
+        UsageCalculator usageCalculator = new UsageCalculator(config.get("classFiles"));
 
         return mutants;
     }

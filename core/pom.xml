@@ -28,6 +28,9 @@
                 <configuration>
                     <source>10</source>
                     <target>10</target>
+                    <compilerArgs>
+                        <arg>--add-exports=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
@@ -75,6 +78,13 @@
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.core</artifactId>
             <version>0.8.5</version>
+        </dependency>
+
+        <!-- ASM: bytecode manipulation -->
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>7.2</version>
         </dependency>
     </dependencies>
 
