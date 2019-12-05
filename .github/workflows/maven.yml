@@ -16,8 +16,13 @@ jobs:
         version: 10
         architecture: x64
         jdkFile: ./openjdk-10_linux-x64_bin.tar.gz
-    - name: Build with Maven
+    - name: Maven Package
       env:
         GITHUB_USERNAME: x-access-token
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: mvn --settings maven/settings.xml package
+    - name: Maven Test
+      env:
+        GITHUB_USERNAME: x-access-token
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: mvn --settings maven/settings.xml test
