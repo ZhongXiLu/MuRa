@@ -24,7 +24,7 @@ public class ReportGenerator {
      * @param mutants   The list of mutants.
      * @param outputDir The output directory where the report will be generated.
      */
-    public static void generateReport(List<Mutant> mutants, String outputDir) throws IOException {
+    public static void generateReport(final List<Mutant> mutants, final String outputDir) throws IOException {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
         cfg.setDirectoryForTemplateLoading(new File(ReportGenerator.class.getClassLoader().getResource("templates").getFile()));
         cfg.setDefaultEncoding("UTF-8");
@@ -33,7 +33,12 @@ public class ReportGenerator {
 
         Map<String, Object> templateData = new HashMap<>();
         templateData.put("mutants", mutants);
+        if (!mutants.isEmpty()) {
+            final List<Coefficient> coeffs = ((RankedMutant) mutants.get(0)).getRankCoefficients();
+            templateData.put("rankers", coeffs);
+        }
 
+        // TODO: create document and load data dynamically in report? (https://datatables.net/reference/option/deferRender)
         Writer fileWriter = new FileWriter(new File("index.html"));
         try {
             template.process(templateData, fileWriter);

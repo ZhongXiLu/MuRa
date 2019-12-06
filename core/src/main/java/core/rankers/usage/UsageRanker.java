@@ -44,7 +44,7 @@ public class UsageRanker {
         for (Mutant mutant : mutants) {
             final String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod() + mutant.getMutatedMethodDescr();
             final double coeff = (double) usageCalculator.getUsageCount(methodName) / (double) highestUsage;
-            final String explanation = mutant.getMutatedMethod() + " is used " + usageCalculator.getUsageCount(methodName) + " times";
+            final String explanation = mutant.getMutatedMethod() + " is used " + usageCalculator.getUsageCount(methodName) + " time(s)";
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient(rankingMethod, coeff, explanation)
             );

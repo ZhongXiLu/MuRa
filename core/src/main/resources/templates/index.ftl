@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,35 +10,64 @@
     <title>MuRa</title>
 </head>
 
-<body>
+<body style="height: 100%">
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col-2 bg-dark text-light">
+            <div class="sticky-top">
+                <#-- Input of the coefficients weights -->
+                <br><br>
+                <h2>Customize Parameters</h2>
+                <br>
+                <#list rankers as rank>
+                    <label for="customRange1"><h5>${rank.getRanker()}</h5></label>
+                    <input type="range" class="custom-range" id="${rank.getRanker()}">
+                </#list>
+            </div>
+        </div>
 
-<div class="container">
-    <br><br>
-    <h1>Ranked Mutants</h1>
+        <div class="col-10" id="main">
+            <#-- Table with mutants -->
 
-    <br>
-    <table id="mutants" class="table table-striped table-bordered table-hover">
-        <thead class="thead-dark">
-        <tr>
-            <th>Score</th>
-            <th>Mutated Method</th>
-            <th>Mutator</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list mutants as mutant>
-            <tr <#if mutant.survived()> class="table-success" <#else> class="table-danger" </#if>>
-                <td>${mutant.getScore()}</td>
-                <#if mutant.mutatedMethod == "<init>">
-                    <td>${mutant.mutatedClass}.<b>&lt;init&gt;</b><i>${mutant.mutatedMethodDescr}</i></td>
-                <#else>
-                    <td>${mutant.mutatedClass}.<b>${mutant.mutatedMethod}</b><i>${mutant.mutatedMethodDescr}</i></td>
-                </#if>
-                <td data-toggle="tooltip" data-delay="500" data-placement="top" title="${mutant.notes}">${mutant.mutator}</td>
-            </tr>
-        </#list>
-        </tbody>
-    </table>
+            <br><br>
+            <h1>Ranked Mutants</h1>
+
+            <br>
+            <table id="mutants" class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Score</th>
+                    <#list rankers as rank>
+                        <th>${rank.getRanker()}</th>
+                    </#list>
+                    <th>Mutated Method</th>
+                    <th>Mutator</th>
+                </tr>
+                </thead>
+                <tbody>
+                <#list mutants as mutant>
+                    <tr <#if mutant.survived()> class="table-success" <#else> class="table-danger" </#if>>
+                        <td><b>${mutant.getScore()}</b></td>
+
+                        <#list mutant.getRankCoefficients() as rank>
+                            <td data-toggle="tooltip" data-delay="500" data-placement="top"
+                                title="${rank.getExplanation()}">${rank.getValue()}</td>
+                        </#list>
+
+                        <#if mutant.mutatedMethod == "<init>">
+                            <td><samp>${mutant.mutatedClass}.<b>&lt;init&gt;</b><i>${mutant.mutatedMethodDescr}</i></samp></td>
+                        <#else>
+                            <td><samp>${mutant.mutatedClass}.<b>${mutant.mutatedMethod}</b><i>${mutant.mutatedMethodDescr}</i></samp></td>
+                        </#if>
+                        <td data-toggle="tooltip" data-delay="500" data-placement="top"
+                            title="${mutant.notes}">${mutant.mutator}</td>
+                    </tr>
+                </#list>
+                </tbody>
+            </table>
+            <br><br>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -58,7 +87,9 @@
     });
     $(document).ready(function () {
         $('#mutants').DataTable({
-            "order": [[0, "desc"]]  // sort score in descending
+            "order": [[0, "desc"]],
+            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+            "pagingType": "numbers"
         });
     });
 </script>
