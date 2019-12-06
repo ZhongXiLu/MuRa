@@ -30,9 +30,9 @@
             <tr <#if mutant.survived()> class="table-success" <#else> class="table-danger" </#if>>
                 <td>${mutant.getScore()}</td>
                 <#if mutant.mutatedMethod == "<init>">
-                    <td>${mutant.mutatedClass}.&lt;init&gt;</td>
+                    <td>${mutant.mutatedClass}.<b>&lt;init&gt;</b><i>${mutant.mutatedMethodDescr}</i></td>
                 <#else>
-                    <td>${mutant.mutatedClass}.${mutant.mutatedMethod}</td>
+                    <td>${mutant.mutatedClass}.<b>${mutant.mutatedMethod}</b><i>${mutant.mutatedMethodDescr}</i></td>
                 </#if>
                 <td data-toggle="tooltip" data-delay="500" data-placement="top" title="${mutant.notes}">${mutant.mutator}</td>
             </tr>

@@ -1,5 +1,6 @@
 package core.rankers.complexity;
 
+import core.Coefficient;
 import core.RankedMutant;
 import lumutator.Mutant;
 import org.apache.commons.io.FileUtils;
@@ -14,32 +15,40 @@ import java.util.List;
 public class ComplexityRanker {
 
     /**
+     * Name of the ranking method.
+     */
+    final static String rankingMethod = "Complexity";
+
+    /**
      * Rank mutants based on their complexity.
      *
      * @param mutants    List of mutants that needs to be ranked.
      * @param classesDir Directory that contains all the class files.
      */
-    public static void rank(List<Mutant> mutants, String classesDir) throws IOException {
+    public static void rank(List<Mutant> mutants, final String classesDir) throws IOException {
 
-        List<File> files = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
+        final List<File> files = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
 
-        CoverageRunner coverageRunner = new CoverageRunner();
+        final CoverageRunner coverageRunner = new CoverageRunner();
         coverageRunner.runCoverage(files);
 
         // First iteration to get first the highest CC
         int highestCC = 0;
         for (Mutant mutant : mutants) {
-            String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod();
-            int cc = coverageRunner.getComplexity(methodName);
+            final String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod();
+            final int cc = coverageRunner.getComplexity(methodName);
             if (cc > highestCC) {
                 highestCC = cc;
             }
         }
 
         for (Mutant mutant : mutants) {
-            String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod();
-            double coeff = (double) coverageRunner.getComplexity(methodName) / (double) highestCC;
-            ((RankedMutant) mutant).addRankCoefficient(coeff, "TODO");  // TODO: add meaningful explanation
+            final String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod();
+            final double coeff = (double) coverageRunner.getComplexity(methodName) / (double) highestCC;
+            final String explanation = mutant.getMutatedMethod() + " has a Cyclomatic Complexity of " + coverageRunner.getComplexity(methodName);
+            ((RankedMutant) mutant).addRankCoefficient(
+                    new Coefficient(rankingMethod, coeff, explanation)
+            );
         }
     }
 

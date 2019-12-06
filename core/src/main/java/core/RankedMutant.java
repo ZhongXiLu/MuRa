@@ -1,8 +1,6 @@
 package core;
 
 import lumutator.Mutant;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ public class RankedMutant extends Mutant {
      * All the rank coefficients from all the different rankers.
      * Store some additional explanation as well.
      */
-    private List<Pair<Double, String>> rankCoefficients;
+    private List<Coefficient> rankCoefficients;
 
     /**
      * Default constructor.
@@ -50,8 +48,8 @@ public class RankedMutant extends Mutant {
         } else {
             double score = 0.0;
             final double coeffWeight = 1.0 / rankCoefficients.size();
-            for (Pair<Double, String> coeff : rankCoefficients) {
-                score += coeffWeight * coeff.getLeft();
+            for (Coefficient coeff : rankCoefficients) {
+                score += coeffWeight * coeff.getValue();
             }
             return score;
         }
@@ -60,14 +58,10 @@ public class RankedMutant extends Mutant {
     /**
      * Add a new rank coefficient to this mutant.
      *
-     * @param coefficient The coefficient (should be in [0,1]).
-     * @param explanation Some explanation (optional).
+     * @param coefficient The new coefficient.
      */
-    public void addRankCoefficient(double coefficient, String explanation) {
-        if (coefficient < 0 || coefficient > 1) {
-            throw new IllegalArgumentException("Coefficient should be in [0,1]");
-        }
-        rankCoefficients.add(new ImmutablePair<>(coefficient, explanation));
+    public void addRankCoefficient(Coefficient coefficient) {
+        rankCoefficients.add(coefficient);
     }
 
     /**
@@ -75,7 +69,7 @@ public class RankedMutant extends Mutant {
      *
      * @return All the rank coefficients.
      */
-    public List<Pair<Double, String>> getRankCoefficients() {
+    public List<Coefficient> getRankCoefficients() {
         return rankCoefficients;
     }
 }

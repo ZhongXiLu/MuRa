@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Tests for {@link RankedMutant}.
@@ -41,22 +40,12 @@ public class RankedMutantTest {
     @Test
     public void testRankCoefficients() {
         assertEquals(0, mutant.getRankCoefficients().size());
-        mutant.addRankCoefficient(1.0, "Ranker A");
-        mutant.addRankCoefficient(0.0, "Ranker B");
-        mutant.addRankCoefficient(0.123, "Ranker C");
+        mutant.addRankCoefficient(new Coefficient("Method A", 1.0));
+        mutant.addRankCoefficient(new Coefficient("Method A", 0.0));
+        mutant.addRankCoefficient(new Coefficient("Method A", 0.123));
         assertEquals(3, mutant.getRankCoefficients().size());
-        assertEquals(1.0, (double) mutant.getRankCoefficients().get(0).getLeft(), 0.001);
-        assertEquals("Ranker A", mutant.getRankCoefficients().get(0).getRight());
-
-        try {
-            mutant.addRankCoefficient(-1, "");
-            mutant.addRankCoefficient(2, "");
-            fail();
-        } catch (IllegalArgumentException e) {
-            // Raises exception = what is expected
-            assertEquals("Coefficient should be in [0,1]", e.getMessage());
-            assertEquals(3, mutant.getRankCoefficients().size());
-        }
+        assertEquals(1.0, mutant.getRankCoefficients().get(0).getValue(), 0.001);
+        assertEquals("Method A", mutant.getRankCoefficients().get(0).getRanker());
     }
 
     /**
@@ -66,11 +55,11 @@ public class RankedMutantTest {
     public void testGetScore() {
         assertEquals(1.0, mutant.getScore(), 0.001);
 
-        mutant.addRankCoefficient(1.0, "Ranker A");
+        mutant.addRankCoefficient(new Coefficient("Method A", 1.0));
         assertEquals(1.0, mutant.getScore(), 0.001);
-        mutant.addRankCoefficient(0.0, "Ranker B");
+        mutant.addRankCoefficient(new Coefficient("Method A", 0.0));
         assertEquals(0.5, mutant.getScore(), 0.001);
-        mutant.addRankCoefficient(0.123, "Ranker C");
+        mutant.addRankCoefficient(new Coefficient("Method A", 0.123));
         assertEquals(0.374, mutant.getScore(), 0.001);
     }
 }
