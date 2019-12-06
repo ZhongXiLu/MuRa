@@ -28,6 +28,7 @@ public class RankedMutantTest {
                 new File("originalFile.class"),
                 "some.package.Class",
                 "someMethod",
+                "(I)V",
                 123,
                 "MathMutator",
                 "Some notes."

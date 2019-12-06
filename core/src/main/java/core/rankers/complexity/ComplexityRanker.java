@@ -39,7 +39,7 @@ public class ComplexityRanker {
         for (Mutant mutant : mutants) {
             String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod();
             double coeff = (double) coverageRunner.getComplexity(methodName) / (double) highestCC;
-            ((RankedMutant) mutant).addRankCoefficient(coeff, "methodName");
+            ((RankedMutant) mutant).addRankCoefficient(coeff, "TODO");  // TODO: add meaningful explanation
         }
     }
 

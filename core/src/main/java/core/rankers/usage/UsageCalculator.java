@@ -1,6 +1,5 @@
 package core.rankers.usage;
 
-import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -27,11 +26,10 @@ public class UsageCalculator {
     /**
      * Constructor: analyze a project and store the usage count of each method.
      *
-     * @param classesDir The classes directory of the project that contains all the .class files.
+     * @param classFiles All the .class files of the project.
      */
-    public UsageCalculator(String classesDir) {
-        List<File> files = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
-        for (File file : files) {
+    public UsageCalculator(List<File> classFiles) {
+        for (File file : classFiles) {
             try {
                 traverseClass(file);
             } catch (IOException e) {
@@ -45,10 +43,10 @@ public class UsageCalculator {
      * Get the usage count of a method.
      *
      * @param method Name of the method, including its package name (e.g. some.package.method).
-     * @return The usage count, -1 if method does not exist.
+     * @return The usage count.
      */
     public int getUsageCount(String method) {
-        return usages.getOrDefault(method, -1);
+        return usages.getOrDefault(method, 0);
     }
 
     /**
@@ -80,8 +78,7 @@ public class UsageCalculator {
          * Add the method call to the counter.
          */
         public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean ifx) {
-            // TODO: also add `desc` to make distinction between multiple implementations with same method name?
-            final String methodName = owner.replace('/', '.') + "." + name;
+            final String methodName = owner.replace('/', '.') + "." + name + desc;
             usages.put(methodName, usages.getOrDefault(methodName, 0) + 1);
         }
     }
