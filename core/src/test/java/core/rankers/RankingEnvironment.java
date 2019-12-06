@@ -2,15 +2,13 @@ package core.rankers;
 
 import core.RankedMutant;
 import core.TestEnvironment;
-import lumutator.Configuration;
 import lumutator.Mutant;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static pitest.Parser.getMutantsWithMutantType;
 
@@ -36,6 +34,11 @@ public class RankingEnvironment extends TestEnvironment {
             );
         } catch (IOException e) {
             fail();
+        }
+
+        // Mutants are unranked
+        for (Mutant mutant : mutants) {
+            assertEquals(1.0, ((RankedMutant) mutant).getScore(), 0.001);
         }
     }
 
