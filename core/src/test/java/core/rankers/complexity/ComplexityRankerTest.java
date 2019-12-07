@@ -33,7 +33,7 @@ public class ComplexityRankerTest extends RankingEnvironment {
         for (Mutant mutant : mutants) {
             RankedMutant rankedMutant = (RankedMutant) mutant;
             assertEquals(1, rankedMutant.getRankCoefficients().size());
-            scores.add(rankedMutant.getScore());
+            scores.add(rankedMutant.getRawScore());
         }
         scores.sort(Double::compareTo);
         // Check scores for some mutants

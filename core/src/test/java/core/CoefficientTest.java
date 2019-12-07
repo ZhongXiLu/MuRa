@@ -24,19 +24,10 @@ public class CoefficientTest {
         assertEquals("", c2.getRanker());
         assertEquals(1.0, c2.getValue(), 0.001);
         assertEquals("", c2.getExplanation());
-        c2.setValue(0.0);
-        assertEquals(0.0, c2.getValue(), 0.001);
 
         try {
             new Coefficient("Method A", -1.0);
             new Coefficient("Method A", 2.0);
-            fail();
-        } catch (IllegalArgumentException e) {
-            // Raises exception = what is expected
-            assertEquals("Coefficient value should be in [0,1]", e.getMessage());
-        }
-        try {
-            c2.setValue(-1.1);
             fail();
         } catch (IllegalArgumentException e) {
             // Raises exception = what is expected

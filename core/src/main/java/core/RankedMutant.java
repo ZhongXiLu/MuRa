@@ -36,11 +36,11 @@ public class RankedMutant extends Mutant {
     }
 
     /**
-     * Get the current score of the mutant (from 0 to 1).
+     * Get the current raw score of the mutant (not normalized yet).
      *
      * @return The score.
      */
-    public double getScore() {
+    public double getRawScore() {
 
         if (rankCoefficients.isEmpty()) {
             return 1.0;

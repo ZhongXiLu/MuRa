@@ -38,7 +38,7 @@ public class RankingEnvironment extends TestEnvironment {
 
         // Mutants are unranked
         for (Mutant mutant : mutants) {
-            assertEquals(1.0, ((RankedMutant) mutant).getScore(), 0.001);
+            assertEquals(1.0, ((RankedMutant) mutant).getRawScore(), 0.001);
         }
     }
 

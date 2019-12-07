@@ -49,17 +49,17 @@ public class RankedMutantTest {
     }
 
     /**
-     * Test the {@link RankedMutant#getScore()} method.
+     * Test the {@link RankedMutant#getRawScore()} method.
      */
     @Test
     public void testGetScore() {
-        assertEquals(1.0, mutant.getScore(), 0.001);
+        assertEquals(1.0, mutant.getRawScore(), 0.001);
 
         mutant.addRankCoefficient(new Coefficient("Method A", 1.0));
-        assertEquals(1.0, mutant.getScore(), 0.001);
+        assertEquals(1.0, mutant.getRawScore(), 0.001);
         mutant.addRankCoefficient(new Coefficient("Method A", 0.0));
-        assertEquals(0.5, mutant.getScore(), 0.001);
+        assertEquals(0.5, mutant.getRawScore(), 0.001);
         mutant.addRankCoefficient(new Coefficient("Method A", 0.123));
-        assertEquals(0.374, mutant.getScore(), 0.001);
+        assertEquals(0.374, mutant.getRawScore(), 0.001);
     }
 }

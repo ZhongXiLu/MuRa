@@ -27,8 +27,6 @@ public class MuRa {
         ComplexityRanker.rank(mutants, config.get("classFiles"));
         UsageRanker.rank(mutants, config.get("classFiles"));
 
-        // TODO: normalize scores/coeffs once more
-
         return mutants;
     }
 

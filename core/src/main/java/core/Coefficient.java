@@ -73,15 +73,4 @@ public class Coefficient {
         return explanation;
     }
 
-    /**
-     * Set a new value of the coefficient. Useful in case we want to normalize the values.
-     *
-     * @param value New value of the coefficient.
-     */
-    public void setValue(Double value) {
-        if (value < 0 || value > 1) {
-            throw new IllegalArgumentException("Coefficient value should be in [0,1]");
-        }
-        this.value = value;
-    }
 }
