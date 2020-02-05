@@ -3,12 +3,12 @@ package core.rankers.usage;
 import core.RankedMutant;
 import core.rankers.RankingEnvironment;
 import lumutator.Mutant;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link UsageRanker}.

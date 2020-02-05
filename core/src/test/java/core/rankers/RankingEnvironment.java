@@ -3,13 +3,13 @@ package core.rankers;
 import core.RankedMutant;
 import core.TestEnvironment;
 import lumutator.Mutant;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static pitest.Parser.getMutantsWithMutantType;
 
 /**
@@ -25,7 +25,7 @@ public class RankingEnvironment extends TestEnvironment {
     /**
      * Parse the PITest mutants.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         try {
             mutants = getMutantsWithMutantType(

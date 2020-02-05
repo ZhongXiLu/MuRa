@@ -1,12 +1,12 @@
 package core;
 
 import lumutator.Configuration;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Contains a list of mutants from a small banking application.
@@ -16,7 +16,7 @@ public class TestEnvironment {
     /**
      * Compile and test the banking application.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() {
         try {
             Configuration.getInstance().initialize(TestEnvironment.class.getClassLoader().getResource("bank_config.xml").getFile());
@@ -32,7 +32,7 @@ public class TestEnvironment {
     /**
      * Clean up the working directory (bank application).
      */
-    @AfterClass
+    @AfterAll
     public static void tearDownAfterClass() {
         try {
             // Clean up

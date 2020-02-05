@@ -1,11 +1,11 @@
 package core;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for {@link RankedMutant}.
@@ -20,7 +20,7 @@ public class RankedMutantTest {
     /**
      * Set up two mutants.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         mutant = new RankedMutant(
                 new File("originalFile.java"),

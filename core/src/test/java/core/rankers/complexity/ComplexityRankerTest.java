@@ -3,14 +3,14 @@ package core.rankers.complexity;
 import core.RankedMutant;
 import core.rankers.RankingEnvironment;
 import lumutator.Mutant;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for {@link ComplexityRanker}.
