@@ -80,6 +80,13 @@
             <version>0.8.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>0.8.5</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- ASM: bytecode manipulation -->
         <dependency>
             <groupId>org.ow2.asm</groupId>

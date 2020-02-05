@@ -1,6 +1,7 @@
 package core;
 
 import core.rankers.complexity.ComplexityRanker;
+import core.rankers.impact.ImpactRanker;
 import core.rankers.usage.UsageRanker;
 import lumutator.Configuration;
 import lumutator.Mutant;
@@ -26,6 +27,7 @@ public class MuRa {
 
         ComplexityRanker.rank(mutants, config.get("classFiles"));
         UsageRanker.rank(mutants, config.get("classFiles"));
+        ImpactRanker.rank(mutants, config.get("classFiles"));
 
         return mutants;
     }
