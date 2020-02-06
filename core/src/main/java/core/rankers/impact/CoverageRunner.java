@@ -41,15 +41,21 @@ public final class CoverageRunner {
     private String allTestNames;
 
     /**
+     * Path to the JaCoCo agent jar file.
+     */
+    private File agentJar;
+
+    /**
      * Constructor.
      *
      * @param classesDir Directory containing all the class files of the source.
      */
-    public CoverageRunner(final String classesDir) {
+    public CoverageRunner(final String classesDir) throws IOException {
         Configuration config = Configuration.getInstance();
         classCoveredInstructionCounts = new HashMap<>();
         allTestNames = getAllTestNames(config.get("testDir"));
         classFiles = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
+        agentJar = AgentJar.extractToTempLocation();
     }
 
     /**
@@ -60,16 +66,18 @@ public final class CoverageRunner {
     public Map<String, Integer> runCoverage() throws IOException {
         Configuration config = Configuration.getInstance();
         classCoveredInstructionCounts = new HashMap<>();
+        File execFile = new File("jacoco.exec");
 
         // Run all tests using the JaCoCo Agent
-        final String testCommand = String.format("java -javaagent:%s -cp %s %s %s",
-                AgentJar.extractToTempLocation().toString(),
+        final String testCommand = String.format("java -javaagent:%s=destfile=%s,append=false -cp %s %s %s",
+                agentJar.getCanonicalPath(),
+                execFile.getCanonicalPath(),
                 config.get("classPath"),
                 config.get("testRunner"),
                 allTestNames
         );
         try {
-            Process process = Runtime.getRuntime().exec(testCommand, null, new File(config.get("projectDir")));
+            Process process = Runtime.getRuntime().exec(testCommand);
             int timeout = 4;    // seconds
             if (config.hasParameter("timeout")) {
                 timeout = Integer.parseInt(config.get("timeout"));
@@ -82,7 +90,7 @@ public final class CoverageRunner {
         } catch (InterruptedException e) {
             throw new RuntimeException("Failed calculating coverage while running the tests");
         }
-        analyzeCoverage("jacoco.exec");
+        analyzeCoverage(execFile);
         return classCoveredInstructionCounts;
     }
 
@@ -92,9 +100,9 @@ public final class CoverageRunner {
      * @param execFile   The execution file from running all the tests.
      * @throws IOException If the execution file cannot be found.
      */
-    private void analyzeCoverage(String execFile) throws IOException {
+    private void analyzeCoverage(File execFile) throws IOException {
         ExecFileLoader execFileLoader = new ExecFileLoader();
-        execFileLoader.load(new File(execFile));
+        execFileLoader.load(execFile);
 
         final CoverageBuilder coverageBuilder = new CoverageBuilder();
         final Analyzer analyzer = new Analyzer(execFileLoader.getExecutionDataStore(), coverageBuilder);
@@ -105,6 +113,9 @@ public final class CoverageRunner {
 
         for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
             classCoveredInstructionCounts.put(classCoverage.getName(), classCoverage.getInstructionCounter().getCoveredCount());
+            //System.out.println(classCoverage.getName());
+            //System.out.println(classCoverage.getInstructionCounter().getCoveredCount());
+            //System.out.println(classCoverage.getInstructionCounter().getTotalCount());
         }
     }
 

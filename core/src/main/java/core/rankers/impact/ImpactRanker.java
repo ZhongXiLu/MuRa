@@ -1,19 +1,11 @@
 package core.rankers.impact;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseException;
-import com.github.javaparser.ast.CompilationUnit;
 import core.Coefficient;
 import core.RankedMutant;
 import lumutator.Configuration;
 import lumutator.Mutant;
 import me.tongfei.progressbar.ProgressBar;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -115,40 +107,6 @@ public class ImpactRanker {
                     new Coefficient(rankingMethod, coeff, explanation)
             );
         }
-    }
-
-    /**
-     * Get all the test classes in the original project including its package.
-     *
-     * @param testDirectory Directory that contains all the test files.
-     * @return String with all the tests classes separated by a space.
-     */
-    private String getAllTestNames(String testDirectory) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        List<File> testFiles = (List<File>) FileUtils.listFiles(
-                new File(testDirectory),
-                new RegexFileFilter("(?i)^(.*?test.*?)"),       // only match test files
-                DirectoryFileFilter.DIRECTORY
-        );
-
-        for (File file : testFiles) {
-            try {
-                CompilationUnit compilationUnit = JavaParser.parse(file);
-                final String classToDebug = String.format(
-                        "%s.%s",
-                        compilationUnit.getPackage().getName(),
-                        FilenameUtils.removeExtension(file.getName())
-                );
-                stringBuilder.append(" ");
-                stringBuilder.append(classToDebug);
-
-            } catch (ParseException | IOException e) {
-                // Should not be possible
-            }
-        }
-
-        return stringBuilder.toString();
     }
 
 }

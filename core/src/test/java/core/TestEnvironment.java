@@ -5,6 +5,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.fail;
 
@@ -21,6 +24,14 @@ public class TestEnvironment {
         try {
             Configuration.getInstance().initialize(TestEnvironment.class.getClassLoader().getResource("bank_config.xml").getFile());
             Configuration config = Configuration.getInstance();
+
+            // Small hack to get junit jar added to classpath
+            String[] classpathEntries = System.getProperty("java.class.path").split(File.pathSeparator);
+            for (String classpathEntry : classpathEntries) {
+                if (classpathEntry.contains("junit")) {
+                    config.set("classPath", config.get("classPath") + ":" + classpathEntry);
+                }
+            }
 
             Process process = Runtime.getRuntime().exec("mvn test", null, new File(config.get("projectDir")));
             process.waitFor();
