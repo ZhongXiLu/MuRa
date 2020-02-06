@@ -16,7 +16,10 @@ import org.jacoco.core.tools.ExecFileLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Calculate the coverage on a set of files from a project.
@@ -25,56 +28,83 @@ import java.util.List;
 public final class CoverageRunner {
 
     /**
-     * Constructor.
+     * All the class files.
      */
-    public CoverageRunner() {
+    List<File> classFiles;
+    /**
+     * Map containing the covered instruction count of each class.
+     */
+    private Map<String, Integer> classCoveredInstructionCounts;
+    /**
+     * String with all the tests classes separated by a space.
+     */
+    private String allTestNames;
+
+    /**
+     * Constructor.
+     *
+     * @param classesDir Directory containing all the class files of the source.
+     */
+    public CoverageRunner(final String classesDir) {
+        Configuration config = Configuration.getInstance();
+        classCoveredInstructionCounts = new HashMap<>();
+        allTestNames = getAllTestNames(config.get("testDir"));
+        classFiles = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
     }
 
     /**
      * Calculate the coverage of the system using the tests.
      *
-     * @param classesDir Directory containing all the class files.
+     * @return Map containing the covered instruction count of each class, null if running the coverage was not successful (e.g. failed due to timeout).
      */
-    public void runCoverage(final String classesDir) throws IOException {
+    public Map<String, Integer> runCoverage() throws IOException {
         Configuration config = Configuration.getInstance();
-        AgentJar.extractToTempLocation();
+        classCoveredInstructionCounts = new HashMap<>();
 
         // Run all tests using the JaCoCo Agent
-        final String testCommand = String.format("java -javaagent:javaagent.jar -cp %s %s %s",
+        final String testCommand = String.format("java -javaagent:%s -cp %s %s %s",
+                AgentJar.extractToTempLocation().toString(),
                 config.get("classPath"),
                 config.get("testRunner"),
-                getAllTestNames(config.get("testDir"))
+                allTestNames
         );
         try {
             Process process = Runtime.getRuntime().exec(testCommand, null, new File(config.get("projectDir")));
-            process.waitFor();
+            int timeout = 4;    // seconds
+            if (config.hasParameter("timeout")) {
+                timeout = Integer.parseInt(config.get("timeout"));
+            }
+            if (!process.waitFor(timeout, TimeUnit.SECONDS)) {
+                // Mutation might cause a deadlock
+                process.destroy();
+                return null;
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException("Failed calculating coverage while running the tests");
         }
-
-        analyzeCoverage("jacoco.exec", classesDir);
+        analyzeCoverage("jacoco.exec");
+        return classCoveredInstructionCounts;
     }
 
     /**
      * Get all the coverage information using the execution file and the class files.
      *
      * @param execFile   The execution file from running all the tests.
-     * @param classesDir Directory containing all the class files of the source.
      * @throws IOException If the execution file cannot be found.
      */
-    private void analyzeCoverage(String execFile, String classesDir) throws IOException {
+    private void analyzeCoverage(String execFile) throws IOException {
         ExecFileLoader execFileLoader = new ExecFileLoader();
         execFileLoader.load(new File(execFile));
 
         final CoverageBuilder coverageBuilder = new CoverageBuilder();
         final Analyzer analyzer = new Analyzer(execFileLoader.getExecutionDataStore(), coverageBuilder);
 
-        analyzer.analyzeAll(new File(classesDir));
+        for (final File file : classFiles) {
+            analyzer.analyzeAll(file);
+        }
 
         for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
-            System.out.println(classCoverage.getName());
-            System.out.println(classCoverage.getInstructionCounter().getCoveredCount());
-            System.out.println(classCoverage.getInstructionCounter().getTotalCount());
+            classCoveredInstructionCounts.put(classCoverage.getName(), classCoverage.getInstructionCounter().getCoveredCount());
         }
     }
 
