@@ -43,7 +43,7 @@ public class ImpactRanker {
 
         // Calculate the coverage for each mutant
         String currentTempFile = "";    // Store current class, so we dont need to make a copy for each mutant
-        for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating impact for each mutant")) {
+        for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating impact")) {
             // Most of it copied from: https://github.com/ZhongXiLu/LuMutator/blob/master/core/src/main/java/lumutator/tracer/Tracer.java
             final String classFilesDir = config.get("classFiles") + "/" + mutant.getMutatedClass().replace(".", "/");
             final String newClassFile = mutant.getClassFile().getCanonicalPath();

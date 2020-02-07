@@ -10,8 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link CoverageRunner}.
@@ -42,7 +41,8 @@ public class CoverageRunnerTest extends TestEnvironment {
             Method method = coverageRunner.getClass().getDeclaredMethod("getAllTestNames", String.class);
             method.setAccessible(true);
             String allTestNames = (String) method.invoke(coverageRunner, config.get("testDir"));
-            assertEquals(" bank.BankTest bank.CustomerTest", allTestNames);
+            assertTrue(allTestNames.contains("bank.BankTest"));
+            assertTrue(allTestNames.contains("bank.CustomerTest"));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             // Should not happen
             fail();

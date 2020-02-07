@@ -93,6 +93,13 @@
             <artifactId>asm</artifactId>
             <version>7.2</version>
         </dependency>
+
+        <!-- Progress bar -->
+        <dependency>
+            <groupId>me.tongfei</groupId>
+            <artifactId>progressbar</artifactId>
+            <version>0.8.1</version>
+        </dependency>
     </dependencies>
 
 
