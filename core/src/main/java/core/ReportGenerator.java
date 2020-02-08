@@ -38,7 +38,6 @@ public class ReportGenerator {
             templateData.put("rankers", coeffs);
         }
 
-        // TODO: create document and load data dynamically in report? (https://datatables.net/reference/option/deferRender)
         Writer fileWriter = new FileWriter(new File("index.html"));
         try {
             template.process(templateData, fileWriter);

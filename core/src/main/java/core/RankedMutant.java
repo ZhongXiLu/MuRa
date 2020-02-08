@@ -1,8 +1,11 @@
 package core;
 
 import lumutator.Mutant;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,4 +75,22 @@ public class RankedMutant extends Mutant {
     public List<Coefficient> getRankCoefficients() {
         return rankCoefficients;
     }
+
+    /**
+     * Get the location where the mutant resides.
+     *
+     * @param extra Number of extra lines around the mutant (for more context).
+     * @return The lines where the mutant resides.
+     */
+    public String getLines(int extra) throws IOException {
+        StringBuilder mutantInformation = new StringBuilder();
+        List<String> lines = Files.readAllLines(getOriginalFile().toPath());
+        for (int l = getLineNr() - extra - 1; l <= getLineNr() + extra - 1; l++) {
+            if (l >= 0 && l < lines.size()) {
+                mutantInformation.append(lines.get(l) + "\n");
+            }
+        }
+        return StringEscapeUtils.escapeHtml4(mutantInformation.toString());
+    }
+
 }
