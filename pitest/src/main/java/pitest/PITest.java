@@ -9,6 +9,7 @@ import org.apache.commons.cli.*;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pitest.Parser.getMutantsWithMutantType;
 
@@ -54,8 +55,11 @@ public class PITest {
                     false, RankedMutant.class
             );
 
+            // Only retrieve the survived mutants
+            List<Mutant> survivedMutants = mutants.stream().filter(Mutant::survived).collect(Collectors.toList());
+
             // Call MuRa
-            List<Mutant> rankedMutants = MuRa.rankMutants(mutants, cmd.getOptionValue("config"));
+            List<Mutant> rankedMutants = MuRa.rankMutants(survivedMutants, cmd.getOptionValue("config"));
 
             // Generate report
             ReportGenerator.generateReport(rankedMutants, ".");

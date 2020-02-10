@@ -72,7 +72,7 @@
                         data-mutator="<ul><li><b>${mutant.mutator}</b>: ${mutant.notes}</li></ul>"
                         data-mutatedMethod="<#if mutant.mutatedMethod == '<init>'><samp>${mutant.mutatedClass}.<b>&lt;init&gt;</b><i>${mutant.mutatedMethodDescr}</i></samp><#else><samp>${mutant.mutatedClass}.<b>${mutant.mutatedMethod}</b><i>${mutant.mutatedMethodDescr}</i></samp></#if>"
                         data-coeffs="<ul><#list mutant.getRankCoefficients() as rank><li><b>${rank.getRanker()}</b>: ${rank.getValue()} (${rank.getExplanation()})</li></#list></ul>"
-                        data-location="${mutant.getLines(5)}" <#if mutant.survived()> class="table-success mutant" <#else> class="table-danger mutant" </#if>>
+                        data-location="${mutant.getLines(5)}" class="mutant">
                         <td class="score" data-score="${mutant.getRawScore()}">${mutant.getRawScore()}</td>
 
                         <#list mutant.getRankCoefficients() as rank>

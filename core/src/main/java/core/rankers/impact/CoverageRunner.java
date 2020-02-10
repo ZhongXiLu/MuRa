@@ -78,7 +78,7 @@ public final class CoverageRunner {
         );
         try {
             Process process = Runtime.getRuntime().exec(testCommand);
-            int timeout = 4;    // seconds
+            int timeout = 60;    // seconds
             if (config.hasParameter("timeout")) {
                 timeout = Integer.parseInt(config.get("timeout"));
             }

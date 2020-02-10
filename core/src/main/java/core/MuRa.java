@@ -17,19 +17,19 @@ public class MuRa {
     /**
      * Rank all the mutants.
      *
-     * @param configFile Path to the configuration file.
-     * @param mutants    List of mutants that need to be ranked.
+     * @param survivedMutants List of survived mutants that need to be ranked.
+     * @param configFile      Path to the configuration file.
      * @return List of mutants that are ranked.
      */
-    public static List<Mutant> rankMutants(List<Mutant> mutants, String configFile) throws IOException {
+    public static List<Mutant> rankMutants(List<Mutant> survivedMutants, String configFile) throws IOException {
         Configuration.getInstance().initialize(configFile);
         Configuration config = Configuration.getInstance();
 
-        ComplexityRanker.rank(mutants, config.get("classFiles"));
-        UsageRanker.rank(mutants, config.get("classFiles"));
-        ImpactRanker.rank(mutants, config.get("classFiles"));
+        ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
+        UsageRanker.rank(survivedMutants, config.get("classFiles"));
+        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
 
-        return mutants;
+        return survivedMutants;
     }
 
 }
