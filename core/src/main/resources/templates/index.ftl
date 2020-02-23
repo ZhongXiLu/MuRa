@@ -81,9 +81,9 @@
                         </#list>
 
                         <#if mutant.mutatedMethod == "<init>">
-                        <td><samp>${mutant.mutatedClass}.<b>&lt;init&gt;</b><i>${mutant.mutatedMethodDescr}</i></samp></td>
+                        <td><samp>${mutant.mutatedClass}.<b>&lt;init&gt;</b></samp></td>
                         <#else>
-                        <td><samp>${mutant.mutatedClass}.<b>${mutant.mutatedMethod}</b><i>${mutant.mutatedMethodDescr}</i></samp></td>
+                        <td><samp>${mutant.mutatedClass}.<b>${mutant.mutatedMethod}</b></samp></td>
                         </#if>
                         <td data-toggle="tooltip" data-delay="200" data-placement="top"
                             title="${mutant.notes}">${mutant.mutator}</td>
@@ -107,8 +107,8 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li id="file"></li>
-                        <li id="mutatedMethod"></li>
+                        <li id="file" style="word-wrap: break-word"></li>
+                        <li id="mutatedMethod" style="word-wrap: break-word"></li>
                     </ul>
                     <hr>
                     <p id="mutator">Mutator</p>
