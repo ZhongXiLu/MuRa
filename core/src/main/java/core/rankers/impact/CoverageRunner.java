@@ -69,6 +69,7 @@ public final class CoverageRunner {
         File execFile = new File("jacoco.exec");
 
         // Run all tests using the JaCoCo Agent
+        final long start = System.currentTimeMillis();
         final String testCommand = String.format("java -javaagent:%s=destfile=%s,append=false -cp %s %s %s",
                 agentJar.getCanonicalPath(),
                 execFile.getCanonicalPath(),
@@ -78,14 +79,18 @@ public final class CoverageRunner {
         );
         try {
             Process process = Runtime.getRuntime().exec(testCommand);
-            int timeout = 60;    // seconds
             if (config.hasParameter("timeout")) {
-                timeout = Integer.parseInt(config.get("timeout"));
+                if (!process.waitFor(Integer.parseInt(config.get("timeout")), TimeUnit.SECONDS)) {
+                    // Mutation might cause a deadlock
+                    process.destroy();
+                    return null;
+                }
             }
-            if (!process.waitFor(timeout, TimeUnit.SECONDS)) {
-                // Mutation might cause a deadlock
-                process.destroy();
-                return null;
+            // Set timeout automatically based on the original test runtime, if none was set
+            if (!config.hasParameter("timeout")) {
+                process.waitFor();
+                final long end = System.currentTimeMillis();
+                config.set("timeout", String.valueOf((int) Math.ceil((end - start) * 1.5 / 1000f) + 1));
             }
         } catch (InterruptedException e) {
             throw new RuntimeException("Failed calculating coverage while running the tests");
