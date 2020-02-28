@@ -66,11 +66,11 @@ public class ChangesHistory {
      */
     public void shiftLineNumbers(String file, Edit edit) {
         if (changesHistory.containsKey(file)) {
-            final HashMap<Integer, Integer> linesMap = changesHistory.get(file);
+            HashMap<Integer, Integer> linesMap = changesHistory.get(file);
             HashMap<Integer, Integer> offsetMap = new HashMap<>();  // how much do we need to shift each line number
 
             // Find the total offset for each line
-            for (Integer insertedLine : linesMap.keySet()) {
+            for (Integer insertedLine : ((HashMap<Integer, Integer>) linesMap.clone()).keySet()) {
                 if (edit.getType() == Edit.Type.INSERT) {
                     // Consider the new version (i.e. version B)
                     if (edit.getBeginB() + 1 <= insertedLine) {

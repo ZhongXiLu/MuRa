@@ -36,7 +36,12 @@ public class HistoryCalculator {
         repo = new FileRepositoryBuilder().setGitDir(gitDirectory).build();
     }
 
-    public ChangesHistory calculateChangedHistory() throws IOException {
+    /**
+     * Calculate the changes history based on the git repository, i.e. how many times a line has been modified in the past.
+     *
+     * @return The changes history.
+     */
+    public ChangesHistory calculateChangesHistory() throws IOException {
         Ref head = repo.exactRef("refs/heads/master");  // only consider commits on master branch
 
         DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);

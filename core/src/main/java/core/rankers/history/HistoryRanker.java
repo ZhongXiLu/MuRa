@@ -26,7 +26,7 @@ public class HistoryRanker {
         Configuration config = Configuration.getInstance();
 
         HistoryCalculator historyCalculator = new HistoryCalculator(new File(".git/"));
-        ChangesHistory history = historyCalculator.calculateChangedHistory();
+        ChangesHistory history = historyCalculator.calculateChangesHistory();
     }
 
 }
