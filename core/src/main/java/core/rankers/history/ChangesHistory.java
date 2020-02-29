@@ -36,11 +36,12 @@ public class ChangesHistory {
         if (changesHistory.containsKey(file)) {
             return changesHistory.get(file).getOrDefault(lineNumber, 0);
         }
-        return -1;
+        return 0;
     }
 
     /**
      * Add all the modified lines to the changes history.
+     * Important: this method does not shift other lines in case this edit adds/removes lines.
      *
      * @param file       The file which was modified.
      * @param editLine   The start line number of the modification.
@@ -85,6 +86,13 @@ public class ChangesHistory {
                     } else if (edit.getBeginA() < insertedLine) {
                         // Edit was issued before inserted line => shift line number
                         offsetMap.put(insertedLine, offsetMap.getOrDefault(insertedLine, 0) - edit.getLengthA());
+                    }
+                } else if (edit.getType() == Edit.Type.REPLACE) {
+                    if (edit.getBeginA() + edit.getLengthA() < insertedLine) {
+                        // Edit was issued before inserted line => see if REPLACE added/deleted lines
+                        // E.g.: REPLACE changed 1 line to 3 lines => shift lines after with 2
+                        final int diff = edit.getLengthB() - edit.getLengthA();
+                        offsetMap.put(insertedLine, offsetMap.getOrDefault(insertedLine, 0) + diff);
                     }
                 }
             }

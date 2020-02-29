@@ -28,7 +28,7 @@ public class MuRa {
 
         ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
         UsageRanker.rank(survivedMutants, config.get("classFiles"));
-        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
+        //ImpactRanker.rank(survivedMutants, config.get("classFiles"));
         HistoryRanker.rank(survivedMutants);
 
         return survivedMutants;

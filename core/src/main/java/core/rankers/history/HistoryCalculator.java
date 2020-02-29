@@ -67,9 +67,9 @@ public class HistoryCalculator {
                             history.renameFile(diff.getOldPath(), diff.getNewPath());
                         }
                         for (Edit edit : diffFormatter.toFileHeader(diff).toEditList()) {
-                            // Only consider the "REPLACE" edits
                             if (edit.getType() == Edit.Type.REPLACE) {
                                 // One or more lines got modified => increment counter
+                                shifts.add(edit);   // Important: replace might cause a shift
                                 replaces.add(edit);
                             } else if (edit.getType() == Edit.Type.INSERT || edit.getType() == Edit.Type.DELETE) {
                                 // Shift line numbers if an edit occurred before a previously recorded line number
@@ -78,13 +78,9 @@ public class HistoryCalculator {
                         }
 
                         // First shift previous line numbers
-                        for (Edit edit : shifts) {
-                            history.shiftLineNumbers(diff.getNewPath(), edit);
-                        }
-                        // Then add new modification (i.e. increment counter)
-                        for (Edit edit : replaces) {
-                            history.incrementCount(diff.getNewPath(), edit.getBeginB(), edit.getLengthB());
-                        }
+                        shifts.forEach(edit -> history.shiftLineNumbers(diff.getNewPath(), edit));
+                        // Then add new modifications (i.e. increment counter)
+                        replaces.forEach(edit -> history.incrementCount(diff.getNewPath(), edit.getBeginB(), edit.getLengthB()));
                     }
                 }
                 prevCommit = commit;

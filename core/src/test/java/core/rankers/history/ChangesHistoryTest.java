@@ -82,6 +82,37 @@ public class ChangesHistoryTest {
     }
 
     /**
+     * Test replaces for the {@link ChangesHistory#shiftLineNumbers(String, Edit)} method, i.e. shifts.
+     */
+    @Test
+    public void testReplaces() {
+        history.incrementCount("fileA", 100, 1);
+
+        history.shiftLineNumbers("fileA", new Edit(10, 11, 10, 11)); // replace line on line 11
+        assertEquals(1, history.getChangesCount("fileA", 101));
+        history.shiftLineNumbers("fileA", new Edit(10, 11, 10, 12)); // replace and add line on line 11
+        assertEquals(1, history.getChangesCount("fileA", 102));
+        history.shiftLineNumbers("fileA", new Edit(10, 12, 10, 11)); // replace and delete line on line 11
+        assertEquals(1, history.getChangesCount("fileA", 101));
+
+        // replace multiple lines at once
+        history.shiftLineNumbers("fileA", new Edit(10, 15, 10, 20));
+        assertEquals(1, history.getChangesCount("fileA", 106));
+        history.shiftLineNumbers("fileA", new Edit(10, 20, 10, 15));
+        assertEquals(1, history.getChangesCount("fileA", 101));
+
+        // replace on inserted line
+        history.incrementCount("fileA", 101, 1);
+        history.incrementCount("fileA", 101, 1);
+        history.shiftLineNumbers("fileA", new Edit(100, 101, 100, 101));
+        assertEquals(1, history.getChangesCount("fileA", 101));
+        assertEquals(2, history.getChangesCount("fileA", 102));
+        history.shiftLineNumbers("fileA", new Edit(100, 101, 100, 102));
+        assertEquals(1, history.getChangesCount("fileA", 101));
+        assertEquals(2, history.getChangesCount("fileA", 103));
+    }
+
+    /**
      * Test the {@link ChangesHistory#renameFile(String, String)} method.
      */
     @Test
@@ -90,7 +121,7 @@ public class ChangesHistoryTest {
         assertEquals(1, history.getChangesCount("fileA", 11));
         history.renameFile("fileA", "fileB");
         assertEquals(1, history.getChangesCount("fileB", 11));
-        assertEquals(-1, history.getChangesCount("fileA", 11));
+        assertEquals(0, history.getChangesCount("fileA", 11));
     }
 
     /**
