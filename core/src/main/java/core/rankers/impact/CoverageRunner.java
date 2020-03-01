@@ -118,9 +118,6 @@ public final class CoverageRunner {
 
         for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
             classCoveredInstructionCounts.put(classCoverage.getName(), classCoverage.getInstructionCounter().getCoveredCount());
-            //System.out.println(classCoverage.getName());
-            //System.out.println(classCoverage.getInstructionCounter().getCoveredCount());
-            //System.out.println(classCoverage.getInstructionCounter().getTotalCount());
         }
     }
 

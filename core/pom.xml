@@ -100,20 +100,6 @@
             <artifactId>progressbar</artifactId>
             <version>0.8.1</version>
         </dependency>
-
-        <!-- Git library -->
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.6.1.202002131546-r</version>
-        </dependency>
-
-        <!-- Prevent error: "Failed to load class "org.slf4j.impl.StaticLoggerBinder." -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
-        </dependency>
     </dependencies>
 
 

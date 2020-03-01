@@ -5,7 +5,6 @@ import core.RankedMutant;
 import lumutator.Configuration;
 import lumutator.Mutant;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,14 +28,11 @@ public class HistoryRanker {
     public static void rank(List<Mutant> mutants) throws IOException {
         Configuration config = Configuration.getInstance();
 
-        HistoryCalculator historyCalculator = new HistoryCalculator(new File(".git/"));
-        ChangesHistory history = historyCalculator.calculateChangesHistory();
-
         // First iteration to get first the most changes count
         int mostChanges = 0;
         for (Mutant mutant : mutants) {
             Path sourcePath = Paths.get(config.get("projectDir")).relativize(mutant.getOriginalFile().toPath());
-            final int changesCount = history.getChangesCount(sourcePath.toString(), mutant.getLineNr());
+            final int changesCount = GitLogger.getChangesCount(sourcePath.toString(), mutant.getLineNr());
             if (changesCount > mostChanges) {
                 mostChanges = changesCount;
             }
@@ -44,7 +40,7 @@ public class HistoryRanker {
 
         for (Mutant mutant : mutants) {
             Path sourcePath = Paths.get(config.get("projectDir")).relativize(mutant.getOriginalFile().toPath());
-            final int changesCount = history.getChangesCount(sourcePath.toString(), mutant.getLineNr());
+            final int changesCount = GitLogger.getChangesCount(sourcePath.toString(), mutant.getLineNr());
             final double coeff = (double) changesCount / (double) mostChanges;
             final String explanation = "the mutated line has been modified " + changesCount + " time(s) in the past";
             ((RankedMutant) mutant).addRankCoefficient(
