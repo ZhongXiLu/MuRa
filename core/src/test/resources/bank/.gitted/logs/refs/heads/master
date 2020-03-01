@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 3326a746a4bbbc79e631c1020f5a47e9206fd6e4 ZhongXiLu <zhongxilu@hotmail.com> 1583060243 +0100	commit (initial): Initial commit
+3326a746a4bbbc79e631c1020f5a47e9206fd6e4 6225919cd7b6905757bcd004a7445528f53b4bf2 ZhongXiLu <zhongxilu@hotmail.com> 1583060260 +0100	commit: Added source
+6225919cd7b6905757bcd004a7445528f53b4bf2 4e53e1f1a66127426a94abdaa7298b4fcf96fbe6 ZhongXiLu <zhongxilu@hotmail.com> 1583060288 +0100	commit: Fixed getAccountNumber in BankUser
+4e53e1f1a66127426a94abdaa7298b4fcf96fbe6 b3ff5adc3dd0bc52a2dbd9fbec1d659c80d3836d ZhongXiLu <zhongxilu@hotmail.com> 1583060315 +0100	commit: Added getName method in BankUser
+b3ff5adc3dd0bc52a2dbd9fbec1d659c80d3836d 13fe72fd5db563619fc1442dfd713f194dfd0f56 ZhongXiLu <zhongxilu@hotmail.com> 1583060335 +0100	commit: Fixed bug in BankUser
+13fe72fd5db563619fc1442dfd713f194dfd0f56 bd553bb350e8f37da5ef820d14c43724fe842e15 ZhongXiLu <zhongxilu@hotmail.com> 1583060353 +0100	commit: Renamed BankUser to Customer
+bd553bb350e8f37da5ef820d14c43724fe842e15 ebb187e91a08b7e3d13846d9d026ec6bc1a0b81f ZhongXiLu <zhongxilu@hotmail.com> 1583060368 +0100	commit: Fixed another bug in BankUser

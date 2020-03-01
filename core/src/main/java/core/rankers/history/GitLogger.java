@@ -23,11 +23,11 @@ public class GitLogger {
         Configuration config = Configuration.getInstance();
 
         // Execute the `git log -L` command, which traces the evolution of a line
-        final String testCommand = String.format("git log --follow %s -L %s,+1:%1$s", file, lineNr);
+        final String logCommand = String.format("git log --follow %s -L %s,+1:%1$s", file, lineNr);
         int count = -1; // Don't count the commit that added the line
 
         try {
-            Process process = Runtime.getRuntime().exec(testCommand, null, new File(config.get("projectDir")));
+            Process process = Runtime.getRuntime().exec(logCommand, null, new File(config.get("projectDir")));
             process.waitFor();
 
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
