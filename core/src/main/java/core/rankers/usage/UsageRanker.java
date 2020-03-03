@@ -3,6 +3,7 @@ package core.rankers.usage;
 import core.Coefficient;
 import core.RankedMutant;
 import lumutator.Mutant;
+import me.tongfei.progressbar.ProgressBar;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class UsageRanker {
 
         // First iteration to get first the highest usage count
         int highestUsage = 0;
-        for (Mutant mutant : mutants) {
+        for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating usage")) {
             final String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod() + mutant.getMutatedMethodDescr();
             final int usageCount = usageCalculator.getUsageCount(methodName);
             // TODO: just take raw count? maybe log or sqrt the count?

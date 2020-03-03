@@ -41,16 +41,32 @@ public class GitLoggerTest {
     }
 
     /**
-     * Test the {@link GitLogger#getChangesCount(String, int)} method.
+     * Test the {@link GitLogger#getChangesCountCost(String, int)} method.
      */
     @Test
     public void getChangesCount() {
         try {
-            assertEquals(0, GitLogger.getChangesCount("src/main/java/bank/Customer.java", 1));
-            assertEquals(0, GitLogger.getChangesCount("src/main/java/bank/Customer.java", 58));
-            assertEquals(1, GitLogger.getChangesCount("src/main/java/bank/Customer.java", 67));
-            assertEquals(2, GitLogger.getChangesCount("src/main/java/bank/Customer.java", 32));
-            assertEquals(-1, GitLogger.getChangesCount("src/main/java/bank/Customer.java", 999));
+            GitLogger gitLogger = new GitLogger();
+            ChangesCountCost ccc = gitLogger.getChangesCountCost("src/main/java/bank/Customer.java", 1);
+            assertEquals(0, ccc.changes);
+            assertEquals(5, ccc.recent);
+            assertEquals(0.0, ccc.cost, 0.001);
+            ccc = gitLogger.getChangesCountCost("src/main/java/bank/Customer.java", 58);
+            assertEquals(0, ccc.changes);
+            assertEquals(3, ccc.recent);
+            assertEquals(0.0, ccc.cost, 0.001);
+            ccc =  gitLogger.getChangesCountCost("src/main/java/bank/Customer.java", 67);
+            assertEquals(1, ccc.changes);
+            assertEquals(4, ccc.recent);
+            assertEquals(0.429, ccc.cost, 0.001);
+            ccc = gitLogger.getChangesCountCost("src/main/java/bank/Customer.java", 32);
+            assertEquals(2, ccc.changes);
+            assertEquals(0, ccc.recent);
+            assertEquals(2.0, ccc.cost, 0.001);
+            ccc = gitLogger.getChangesCountCost("src/main/java/bank/Customer.java", 999);
+            assertEquals(0, ccc.changes);
+            assertEquals(-1, ccc.recent);
+            assertEquals(0.0, ccc.cost, 0.001);
 
         } catch (IOException e) {
             // Should not happen
