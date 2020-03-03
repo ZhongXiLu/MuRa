@@ -42,11 +42,6 @@ public class GitLogger {
             throw new RuntimeException("Failed running the `git log` command");
         }
 
-        // TODO: temporary fix: sometimes the log command does not return anything...
-        if (count == -1) {
-            count = 0;
-        }
-
         return count;
     }
 

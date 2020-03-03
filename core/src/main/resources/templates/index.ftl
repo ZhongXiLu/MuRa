@@ -66,7 +66,7 @@
                 <tbody>
                 <#list mutants as mutant>
                     <tr data-toggle="modal" data-target="#mutantModal"
-                        data-lineNr="${mutant.getLineNr()}" data-mutatedClass="${mutant.getMutatedClass()}"
+                        data-lineNr="${mutant.getLineNr()?c}" data-mutatedClass="${mutant.getMutatedClass()}"
                         data-filepath="${mutant.getOriginalFile().getCanonicalPath()}"
                         data-filename="${mutant.getOriginalFile().getName()}"
                         data-mutator="<ul><li><b>${mutant.mutator}</b>: ${mutant.notes}</li></ul>"
