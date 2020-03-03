@@ -23,7 +23,7 @@ public class GitLogger {
         Configuration config = Configuration.getInstance();
 
         // Execute the `git log -L` command, which traces the evolution of a line
-        final String logCommand = String.format("git log --follow %s -L %s,+1:%1$s", file, lineNr);
+        final String logCommand = String.format("git log --follow -L %s,+1:%s -- %2$s", lineNr, file);
         int count = -1; // Don't count the commit that added the line
 
         try {
@@ -40,6 +40,11 @@ public class GitLogger {
 
         } catch (InterruptedException e) {
             throw new RuntimeException("Failed running the `git log` command");
+        }
+
+        // TODO: temporary fix: sometimes the log command does not return anything...
+        if (count == -1) {
+            count = 0;
         }
 
         return count;
