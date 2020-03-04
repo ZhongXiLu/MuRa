@@ -70,13 +70,11 @@ public final class CoverageRunner {
 
         // Run all tests using the JaCoCo Agent
         final long start = System.currentTimeMillis();
-        final String testCommand = String.format("java -javaagent:%s=destfile=%s,append=false -cp %s %s %s",
-                agentJar.getCanonicalPath(),
-                execFile.getCanonicalPath(),
-                config.get("classPath"),
-                config.get("testRunner"),
-                allTestNames
-        );
+        final String testCommand = "java -javaagent:" + agentJar.getCanonicalPath()
+                + "=destfile=" + execFile.getCanonicalPath()
+                + ",append=false -cp " + config.get("classPath") + " "
+                + config.get("testRunner") + " " + allTestNames;
+
         try {
             Process process = Runtime.getRuntime().exec(testCommand);
             if (config.hasParameter("timeout")) {
@@ -139,11 +137,7 @@ public final class CoverageRunner {
         for (File file : testFiles) {
             try {
                 CompilationUnit compilationUnit = JavaParser.parse(file);
-                final String classToDebug = String.format(
-                        "%s.%s",
-                        compilationUnit.getPackage().getName(),
-                        FilenameUtils.removeExtension(file.getName())
-                );
+                final String classToDebug = compilationUnit.getPackage().getName() + "." + FilenameUtils.removeExtension(file.getName());
                 stringBuilder.append(" ");
                 stringBuilder.append(classToDebug);
 

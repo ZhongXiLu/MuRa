@@ -65,7 +65,7 @@ public class GitLogger {
         Configuration config = Configuration.getInstance();
 
         // Execute the `git log -L` command, which traces the evolution of a line
-        final String logCommand = String.format("git log --follow -L %s,+1:%s -- %2$s", lineNr, file);
+        final String logCommand = "git log --follow -L " + lineNr + ",+1:" + file + " -- " + file;
         int changes = -1;     // don't count the commit that added the line
         int recent = -1;    // how recent the commit is (0 = most recent)
 

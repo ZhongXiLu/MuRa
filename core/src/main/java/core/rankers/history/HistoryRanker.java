@@ -47,10 +47,9 @@ public class HistoryRanker {
             Mutant mutant = mutants.get(i);
             final ChangesCountCost changesCountCost = changesCountCosts.get(i);
             final double coeff = changesCountCost.cost / highestCost;
-            final String explanation = String.format(
-                    "the mutated line has been modified %d time(s) in the past and the most recent commit that modified this line was %d commit(s) ago"
-                    , changesCountCost.changes, changesCountCost.recent
-            );
+            final String explanation =
+                    "the mutated line has been modified " + changesCountCost.changes + " time(s) in the past and"
+                            + " the most recent commit that modified this line was " + changesCountCost.recent + " commit(s) ago";
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient(rankingMethod, coeff, explanation)
             );
