@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mura</artifactId>
+        <groupId>com.github.mura</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>study</artifactId>
+    <version>1.0</version>
+
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub zhongxilu Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/zhongxilu/MuRa</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>10</source>
+                    <target>10</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- LuMutator: PITest parser, Mutant, Configuration -->
+        <dependency>
+            <groupId>com.github.lumutator</groupId>
+            <artifactId>pitest-example</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <!-- MuRa core -->
+        <dependency>
+            <groupId>com.github.mura</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Git library -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.6.1.202002131546-r</version>
+        </dependency>
+
+        <!-- Prevent error: "Failed to load class "org.slf4j.impl.StaticLoggerBinder." -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+    </dependencies>
+
+</project>
