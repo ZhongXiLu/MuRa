@@ -70,6 +70,7 @@ public class GitLogger {
         int recent = -1;    // how recent the commit is (0 = most recent)
 
         try {
+            // TODO: use ProcessBuilder instead (see Study)
             Process process = Runtime.getRuntime().exec(logCommand, null, new File(config.get("projectDir")));
             process.waitFor();
 

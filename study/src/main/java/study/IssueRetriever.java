@@ -29,7 +29,7 @@ public class IssueRetriever {
 
     /**
      * Get all the closed bug reports of a repository.
-     * A bug report is an issue with a referenced commit or related pull request.
+     * A bug report is an issue that is closed in a commit or pull request and labeled as a 'bug'.
      *
      * @param gitDirectory The .git/ directory.
      * @param repoOwner    The name of the owner of the repository.

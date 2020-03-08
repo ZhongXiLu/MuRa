@@ -17,13 +17,13 @@ public class MuRa {
 
     /**
      * Rank all the mutants.
+     * Important: the config file already needs to be initialized before calling MuRa.
      *
      * @param survivedMutants List of survived mutants that need to be ranked.
-     * @param configFile      Path to the configuration file.
      * @return List of mutants that are ranked.
      */
-    public static List<Mutant> rankMutants(List<Mutant> survivedMutants, String configFile) throws IOException {
-        Configuration.getInstance().initialize(configFile);
+    public static List<Mutant> rankMutants(List<Mutant> survivedMutants) throws IOException {
+        //Configuration.getInstance().initialize(configFile);
         Configuration config = Configuration.getInstance();
 
         ComplexityRanker.rank(survivedMutants, config.get("classFiles"));

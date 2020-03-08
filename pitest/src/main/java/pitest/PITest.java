@@ -9,7 +9,6 @@ import org.apache.commons.cli.*;
 
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static pitest.Parser.getMutantsWithMutantType;
 
@@ -44,7 +43,7 @@ public class PITest {
                 return;
             }
 
-            // Explicitly initialize configuration (which is needed by the PITest parser)
+            // Initialize configuration
             Configuration.getInstance().initialize(cmd.getOptionValue("config"));
             Configuration config = Configuration.getInstance();
 
@@ -52,14 +51,11 @@ public class PITest {
             List<Mutant> mutants = getMutantsWithMutantType(cmd.hasOption("mutants") ?
                             cmd.getOptionValue("mutants") :
                             Paths.get(config.get("projectDir"), "target", "pit-reports").toString(),
-                    false, RankedMutant.class
+                    true, RankedMutant.class
             );
 
-            // Only retrieve the survived mutants
-            List<Mutant> survivedMutants = mutants.stream().filter(Mutant::survived).collect(Collectors.toList());
-
             // Call MuRa
-            List<Mutant> rankedMutants = MuRa.rankMutants(survivedMutants, cmd.getOptionValue("config"));
+            List<Mutant> rankedMutants = MuRa.rankMutants(mutants);
 
             // Generate report
             ReportGenerator.generateReport(rankedMutants, ".");

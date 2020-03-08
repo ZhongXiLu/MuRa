@@ -76,6 +76,7 @@ public final class CoverageRunner {
                 + config.get("testRunner") + " " + allTestNames;
 
         try {
+            // TODO: use ProcessBuilder instead (see Study)
             Process process = Runtime.getRuntime().exec(testCommand);
             if (config.hasParameter("timeout")) {
                 if (!process.waitFor(Integer.parseInt(config.get("timeout")), TimeUnit.SECONDS)) {
