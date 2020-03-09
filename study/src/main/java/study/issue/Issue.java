@@ -1,4 +1,4 @@
-package study;
+package study.issue;
 
 import java.util.HashMap;
 import java.util.Set;

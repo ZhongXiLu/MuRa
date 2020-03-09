@@ -5,6 +5,8 @@ import core.RankedMutant;
 import lumutator.Configuration;
 import lumutator.Mutant;
 import org.apache.commons.cli.*;
+import study.issue.Issue;
+import study.issue.IssueRetriever;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,6 +39,9 @@ public class Study {
             Option repoNameOption = new Option("r", "repo", true, "The name of the repository");
             repoNameOption.setRequired(true);
             options.addOption(repoNameOption);
+            options.addOption(
+                    new Option("l", "label", true, "The label on GitHub for an issue that identifies a bug")
+            );
 
             CommandLineParser parser = new DefaultParser();
             HelpFormatter formatter = new HelpFormatter();
@@ -58,7 +63,8 @@ public class Study {
 
             // Get all closed bug reports
             final List<Issue> bugReports = IssueRetriever.getAllClosedBugReports(
-                    new File(".git/"), cmd.getOptionValue("owner"), cmd.getOptionValue("repo")
+                    new File(".git/"), cmd.getOptionValue("owner"), cmd.getOptionValue("repo"),
+                    cmd.hasOption("label") ? cmd.getOptionValue("label") : "bug"
             );
 
             for (Issue bugReport : bugReports) {

@@ -1,4 +1,4 @@
-package study;
+package study.issue;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -34,8 +34,9 @@ public class IssueRetriever {
      * @param gitDirectory The .git/ directory.
      * @param repoOwner    The name of the owner of the repository.
      * @param repoName     The name of the repository.
+     * @param bugLabel     The label on GitHub for an issue that identifies a bug.
      */
-    public static List<Issue> getAllClosedBugReports(File gitDirectory, String repoOwner, String repoName) throws IOException {
+    public static List<Issue> getAllClosedBugReports(File gitDirectory, String repoOwner, String repoName, String bugLabel) throws IOException {
         final Repository repo = new FileRepositoryBuilder().setGitDir(gitDirectory).build();
         RevWalk walk = new RevWalk(repo);
         DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
@@ -47,7 +48,9 @@ public class IssueRetriever {
         try {
             // (1) Retrieve all the closed issues
             // TODO: get ALL issues instead of `&per_page=100`?
-            final URL queryUrl = new URL(baseUrl + "/repos/" + repoOwner + "/" + repoName + "/issues?state=closed&labels=bug&per_page=100");
+            final URL queryUrl = new URL(
+                    baseUrl + "/repos/" + repoOwner + "/" + repoName + "/issues?state=closed&labels=" + bugLabel + "&per_page=100"
+            );
             String response = RequestSender.sendGetRequest(queryUrl);
             JSONArray issues = new JSONArray(response);
 
