@@ -90,6 +90,7 @@ public class Study {
                 while ((reader.readLine()) != null) {
                 }  // read output from buffer, otherwise buffer might get full
                 process.waitFor();
+                reader.close();
 
                 // Parse PITest mutants
                 List<Mutant> mutants = getMutantsWithMutantType(cmd.hasOption("mutants") ?
@@ -102,9 +103,8 @@ public class Study {
                 // Rank mutants
                 List<Mutant> rankedMutants = MuRa.rankMutants(mutants);
 
-                // TODO: evaluate ranking
-
-                // TODO: write results to file?
+                // Evaluate ranking
+                RankingEvaluator.evaluateRanking(mutants, bugReport);
             }
 
             // Go back to current commit
