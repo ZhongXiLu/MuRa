@@ -40,6 +40,7 @@ public class GitLogger {
                 commitHistory.put(line, recent);
                 recent++;   // go to next commit
             }
+            stdInput.close();
 
         } catch (InterruptedException e) {
             throw new RuntimeException("Failed running the `git log` command");
@@ -84,6 +85,7 @@ public class GitLogger {
                     changes++;
                 }
             }
+            stdInput.close();
 
             // TODO: temporary fix: sometimes the log command does not return anything...
             if (changes <= 0) {

@@ -95,6 +95,10 @@ public class IssueRetriever {
                 }
             }
 
+            diffFormatter.close();
+            walk.close();
+            repo.close();
+
             return closedBugReports;
 
         } catch (IOException e) {
