@@ -101,9 +101,9 @@ public class Study {
 
 
                 // Rank mutants
-                List<Mutant> rankedMutants = MuRa.rankMutants(mutants);
+                MuRa.rankMutants(mutants);
 
-                // Evaluate ranking
+                // Find optimal configuration (i.e. weight for each ranking method) and evaluate ranking
                 RankingEvaluator.evaluateRanking(mutants, bugReport);
             }
 

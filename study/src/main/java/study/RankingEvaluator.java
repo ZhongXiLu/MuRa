@@ -63,55 +63,65 @@ public class RankingEvaluator {
         // Find the highest score (or ranking); this value is needed to normalize the scores
         double highestScore = 0.0;
         for (Mutant mutant : mutants) {
-            List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
-            for (Coefficient coeff : coeffs) {
-                final double mutantScore = coeffWeights.get(coeff.getRanker()) * coeff.getValue();
-                if (mutantScore > highestScore) {
-                    highestScore = mutantScore;
-                }
+            final double mutantScore = getScore(coeffWeights, mutant);
+            if (mutantScore > highestScore) {
+                highestScore = mutantScore;
             }
         }
 
         // Rank each mutant
-        mutants.sort((m1, m2) -> {
-            List<Coefficient> coeffsM1 = ((RankedMutant) m1).getRankCoefficients();
-            List<Coefficient> coeffsM2 = ((RankedMutant) m2).getRankCoefficients();
-
-            double scoreM1 = 0.0;
-            double scoreM2 = 0.0;
-            for (Coefficient coeff : coeffsM1) {
-                scoreM1 += coeffWeights.get(coeff.getRanker()) * coeff.getValue();
-            }
-            for (Coefficient coeff : coeffsM2) {
-                scoreM2 += coeffWeights.get(coeff.getRanker()) * coeff.getValue();
-            }
-
-            if (scoreM1 < scoreM2) {
-                return -1;
-            } else if (scoreM1 > scoreM2) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+        mutants.sort(Comparator.comparingDouble(m -> getScore(coeffWeights, m)));
 
         // (4) Evaluate the ranking
-        // TODO: also take into account mutants with equal scores
-        List<Integer> ranks = new ArrayList<>();
+        List<Double> ranks = new ArrayList<>();
         for (int i = 0; i < mutants.size(); i++) {
-            List<Coefficient> coeffs = ((RankedMutant) mutants.get(i)).getRankCoefficients();
-            double score = 0.0;
-            for (Coefficient coeff : coeffs) {
-                score += coeffWeights.get(coeff.getRanker()) * coeff.getValue();
-            }
             if (fixedMutants.contains(mutants.get(i))) {
-                ranks.add(i + 1);
-                System.out.println("Mutant #" + (i + 1) + ": " + score);
+                final double score = getScore(coeffWeights, mutants.get(i));
+
+                // Calculate how many other mutants have same score/rank
+                int mutantsWithSameScore = 0;
+                boolean sameScore = true;
+                for (int j = i - 1; sameScore; j--) {   // mutants placed lower than the mutant
+                    final double otherScore = getScore(coeffWeights, mutants.get(j));
+                    if (Double.compare(score, otherScore) == 0) {
+                        mutantsWithSameScore++;
+                    } else {
+                        sameScore = false;
+                    }
+                }
+                sameScore = true;
+                for (int j = i + 1; sameScore; j++) {   // mutants placed higher than the mutant
+                    final double otherScore = getScore(coeffWeights, mutants.get(j));
+                    if (Double.compare(score, otherScore) == 0) {
+                        mutantsWithSameScore++;
+                    } else {
+                        sameScore = false;
+                    }
+                }
+
+                ranks.add(i + 1.0 + (mutantsWithSameScore / 2));
+                System.out.println("Mutant @" + (i + 1) + ": " + (score / highestScore));
             }
         }
 
-        final double avgRanking = ranks.stream().mapToInt(Integer::intValue).average().orElse(0.0);
+        final double avgRanking = ranks.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
         System.out.println("Score of the ranking algorithm: " + (avgRanking / mutants.size()));
+    }
+
+    /**
+     * Get the final score of a mutant taking into account some weights.
+     *
+     * @param coeffWeights The weights for each ranking method.
+     * @param mutant       The mutant of which the score needs to be calculated.
+     * @return The final score of the mutant (not normalized yet).
+     */
+    private static double getScore(HashMap<String, Double> coeffWeights, Mutant mutant) {
+        List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
+        double score = 0.0;
+        for (Coefficient coeff : coeffs) {
+            score += coeffWeights.get(coeff.getRanker()) * coeff.getValue();
+        }
+        return score;
     }
 
 }

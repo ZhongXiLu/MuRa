@@ -2,7 +2,6 @@ package core;
 
 import core.rankers.complexity.ComplexityRanker;
 import core.rankers.history.HistoryRanker;
-import core.rankers.impact.ImpactRanker;
 import core.rankers.usage.UsageRanker;
 import lumutator.Configuration;
 import lumutator.Mutant;
@@ -20,18 +19,15 @@ public class MuRa {
      * Important: the config file already needs to be initialized before calling MuRa.
      *
      * @param survivedMutants List of survived mutants that need to be ranked.
-     * @return List of mutants that are ranked.
      */
-    public static List<Mutant> rankMutants(List<Mutant> survivedMutants) throws IOException {
+    public static void rankMutants(List<Mutant> survivedMutants) throws IOException {
         //Configuration.getInstance().initialize(configFile);
         Configuration config = Configuration.getInstance();
 
         ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
         UsageRanker.rank(survivedMutants, config.get("classFiles"));
-        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
+        //ImpactRanker.rank(survivedMutants, config.get("classFiles"));
         HistoryRanker.rank(survivedMutants);
-
-        return survivedMutants;
     }
 
 }
