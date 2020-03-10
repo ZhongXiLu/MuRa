@@ -5,6 +5,7 @@ import core.RankedMutant;
 import lumutator.Configuration;
 import lumutator.Mutant;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FileUtils;
 import study.issue.Issue;
 import study.issue.IssueRetriever;
 
@@ -61,6 +62,9 @@ public class Study {
             Configuration.getInstance().initialize(cmd.getOptionValue("config"));
             Configuration config = Configuration.getInstance();
 
+            // Create log file
+            FileUtils.touch(new File(config.get("projectDir") + "/MuRa.log"));
+
             // Get all closed bug reports
             final List<Issue> bugReports = IssueRetriever.getAllClosedBugReports(
                     new File(".git/"), cmd.getOptionValue("owner"), cmd.getOptionValue("repo"),
@@ -104,7 +108,7 @@ public class Study {
                 MuRa.rankMutants(mutants);
 
                 // Find optimal configuration (i.e. weight for each ranking method) and evaluate ranking
-                RankingEvaluator.evaluateRanking(mutants, bugReport);
+                RankingEvaluator.evaluateRanking(mutants, bugReport, config.get("projectDir") + "/MuRa.log");
             }
 
             // Go back to current commit

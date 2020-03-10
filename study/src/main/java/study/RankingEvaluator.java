@@ -6,6 +6,9 @@ import lumutator.Configuration;
 import lumutator.Mutant;
 import study.issue.Issue;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -20,9 +23,14 @@ public class RankingEvaluator {
      *
      * @param mutants   The list of mutants with their ranking coefficients.
      * @param bugReport The issue (i.e. bug report) on which the ranking should be evaluated on.
+     * @param logFile   Path to file where the log should be written to.
      */
-    public static void evaluateRanking(List<Mutant> mutants, Issue bugReport) {
+    public static void evaluateRanking(List<Mutant> mutants, Issue bugReport, String logFile) throws IOException {
         Configuration config = Configuration.getInstance();
+
+        FileWriter fileWriter = new FileWriter(logFile, true);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println("\nIssue " + bugReport.id + " (commit " + bugReport.commitBeforeFix + ")");
 
         List<Mutant> fixedMutants = new ArrayList<>();  // The mutants that are on a line that is fixed in a future bug
 
@@ -37,10 +45,10 @@ public class RankingEvaluator {
                 fixedMutants.add(mutant);
             }
         }
-        System.out.println("Found " + fixedMutants.size() + " mutants related to issue " + bugReport.id);
+        printWriter.println("Found " + fixedMutants.size() + " mutant(s) related to issue " + bugReport.id);
 
         // (2) Find the optimal configuration
-        System.out.println("Optimal configuration for these mutants:");
+        printWriter.println("Optimal configuration for these mutants:");
 
         // First add all the ranking coefficient values
         HashMap<String, Double> coeffWeights = new HashMap<>();
@@ -54,7 +62,7 @@ public class RankingEvaluator {
         // Take average of the coeff values as "optimal" weight
         for (Map.Entry<String, Double> coeff : coeffWeights.entrySet()) {
             final double optimalCoeffWeight = coeff.getValue() / coeffWeights.size();
-            System.out.println("\t" + coeff.getKey() + ": " + optimalCoeffWeight);
+            printWriter.println("\t" + coeff.getKey() + ": " + optimalCoeffWeight);
             coeffWeights.put(coeff.getKey(), optimalCoeffWeight);
         }
 
@@ -100,12 +108,14 @@ public class RankingEvaluator {
                 }
 
                 ranks.add(i + 1.0 + (mutantsWithSameScore / 2));
-                System.out.println("Mutant @" + (i + 1) + ": " + (score / highestScore));
+                printWriter.println("Mutant @" + (i + 1) + ": " + (score / highestScore));
             }
         }
 
         final double avgRanking = ranks.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        System.out.println("Score of the ranking algorithm: " + (avgRanking / mutants.size()));
+        printWriter.println("Score of the ranking algorithm: " + (avgRanking / mutants.size()));
+
+        printWriter.close();
     }
 
     /**
