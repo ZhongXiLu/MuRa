@@ -30,11 +30,13 @@ public final class CoverageRunner {
     /**
      * All the class files.
      */
-    List<File> classFiles;
+    private List<File> classFiles;
+
     /**
      * Map containing the covered instruction count of each class.
      */
     private Map<String, Integer> classCoveredInstructionCounts;
+
     /**
      * String with all the tests classes separated by a space.
      */
@@ -76,7 +78,6 @@ public final class CoverageRunner {
                 + config.get("testRunner") + " " + allTestNames;
 
         try {
-            // TODO: use ProcessBuilder instead (see Study)
             Process process = Runtime.getRuntime().exec(testCommand);
             if (config.hasParameter("timeout")) {
                 if (!process.waitFor(Integer.parseInt(config.get("timeout")), TimeUnit.SECONDS)) {

@@ -32,7 +32,7 @@ public class GitLogger {
             process.waitFor();
 
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
+            String line;
             int recent = 0;   // how recent the commit is (0 = most recent)
 
             // Iterate through every commit, starting with the most recent one
@@ -71,12 +71,11 @@ public class GitLogger {
         int recent = -1;    // how recent the commit is (0 = most recent)
 
         try {
-            // TODO: use ProcessBuilder instead (see Study)
             Process process = Runtime.getRuntime().exec(logCommand, null, new File(config.get("projectDir")));
             process.waitFor();
 
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
+            String line;
             while ((line = stdInput.readLine()) != null) {
                 if (line.startsWith("commit")) {
                     if (recent == -1) { // most recent commit is always shown first
