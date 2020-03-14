@@ -103,6 +103,10 @@ public class Study {
                         true, RankedMutant.class
                 );
 
+                if (RankingEvaluator.getMutantsRelatedToBugReport(mutants, bugReport).isEmpty()) {
+                    // No mutants are related to the current bug report, so we cannot score the ranking
+                    continue;   // just skip to the next bug report
+                }
 
                 // Rank mutants
                 MuRa.rankMutants(mutants);

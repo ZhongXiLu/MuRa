@@ -19,22 +19,17 @@ import java.util.*;
 public class RankingEvaluator {
 
     /**
-     * Evaluate the mutant ranking of MuRa.
+     * Get all the mutants that are related to the bug report.
+     * I.e. the line on which the fault was injected corresponds a fixed line in the bug report.
      *
-     * @param mutants   The list of mutants with their ranking coefficients.
-     * @param bugReport The issue (i.e. bug report) on which the ranking should be evaluated on.
-     * @param logFile   Path to file where the log should be written to.
+     * @param mutants   List of all the mutants.
+     * @param bugReport The bug report.
+     * @return All the mutants that are related to the bug report.
      */
-    public static void evaluateRanking(List<Mutant> mutants, Issue bugReport, String logFile) throws IOException {
-        Configuration config = Configuration.getInstance();
-
-        FileWriter fileWriter = new FileWriter(logFile, true);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.println("\nIssue " + bugReport.id + " (commit " + bugReport.commitBeforeFix + ")");
-
+    public static List<Mutant> getMutantsRelatedToBugReport(List<Mutant> mutants, Issue bugReport) {
         List<Mutant> fixedMutants = new ArrayList<>();  // The mutants that are on a line that is fixed in a future bug
 
-        // (1) Find the relevant mutants, i.e. the mutants that are on a line that is fixed in a future bug
+        Configuration config = Configuration.getInstance();
         HashMap<String, Set<Integer>> fixedLines = bugReport.fixedLines;
         for (Mutant mutant : mutants) {
             final Path sourcePath = Paths.get(config.get("projectDir")).relativize(mutant.getOriginalFile().toPath());
@@ -45,6 +40,24 @@ public class RankingEvaluator {
                 fixedMutants.add(mutant);
             }
         }
+
+        return fixedMutants;
+    }
+
+    /**
+     * Evaluate the mutant ranking of MuRa.
+     *
+     * @param mutants   The list of mutants with their ranking coefficients.
+     * @param bugReport The issue (i.e. bug report) on which the ranking should be evaluated on.
+     * @param logFile   Path to file where the log should be written to.
+     */
+    public static void evaluateRanking(List<Mutant> mutants, Issue bugReport, String logFile) throws IOException {
+        FileWriter fileWriter = new FileWriter(logFile, true);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println("\nIssue " + bugReport.id + " (commit " + bugReport.commitBeforeFix + ")");
+
+        // (1) Find the relevant mutants, i.e. the mutants that are on a line that is fixed in a future bug
+        List<Mutant> fixedMutants = getMutantsRelatedToBugReport(mutants, bugReport);
         printWriter.println("Found " + fixedMutants.size() + " mutant(s) related to issue " + bugReport.id);
 
         // (2) Find the optimal configuration
