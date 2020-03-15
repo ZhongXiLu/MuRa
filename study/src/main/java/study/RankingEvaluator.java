@@ -103,18 +103,26 @@ public class RankingEvaluator {
                 int mutantsWithSameScore = 0;
                 boolean sameScore = true;
                 for (int j = i - 1; sameScore; j--) {   // mutants placed lower than the mutant
-                    final double otherScore = getScore(coeffWeights, mutants.get(j));
-                    if (Double.compare(score, otherScore) == 0) {
-                        mutantsWithSameScore++;
+                    if (j >= 0) {
+                        final double otherScore = getScore(coeffWeights, mutants.get(j));
+                        if (Double.compare(score, otherScore) == 0) {
+                            mutantsWithSameScore++;
+                        } else {
+                            sameScore = false;
+                        }
                     } else {
                         sameScore = false;
                     }
                 }
                 sameScore = true;
                 for (int j = i + 1; sameScore; j++) {   // mutants placed higher than the mutant
-                    final double otherScore = getScore(coeffWeights, mutants.get(j));
-                    if (Double.compare(score, otherScore) == 0) {
-                        mutantsWithSameScore++;
+                    if (j < mutants.size()) {
+                        final double otherScore = getScore(coeffWeights, mutants.get(j));
+                        if (Double.compare(score, otherScore) == 0) {
+                            mutantsWithSameScore++;
+                        } else {
+                            sameScore = false;
+                        }
                     } else {
                         sameScore = false;
                     }
