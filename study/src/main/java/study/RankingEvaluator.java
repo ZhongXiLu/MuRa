@@ -92,6 +92,7 @@ public class RankingEvaluator {
 
         // Rank each mutant
         mutants.sort(Comparator.comparingDouble(m -> getScore(coeffWeights, m)));
+        Collections.reverse(mutants);
 
         // (4) Evaluate the ranking
         List<Double> ranks = new ArrayList<>();
