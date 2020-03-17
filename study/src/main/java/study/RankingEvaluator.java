@@ -107,12 +107,10 @@ public class RankingEvaluator {
                         final double otherScore = getScore(coeffWeights, mutants.get(j));
                         if (Double.compare(score, otherScore) == 0) {
                             mutantsWithSameScore++;
-                        } else {
-                            sameScore = false;
+                            continue;
                         }
-                    } else {
-                        sameScore = false;
                     }
+                    sameScore = false;
                 }
                 sameScore = true;
                 for (int j = i + 1; sameScore; j++) {   // mutants placed higher than the mutant
@@ -120,12 +118,10 @@ public class RankingEvaluator {
                         final double otherScore = getScore(coeffWeights, mutants.get(j));
                         if (Double.compare(score, otherScore) == 0) {
                             mutantsWithSameScore++;
-                        } else {
-                            sameScore = false;
+                            continue;
                         }
-                    } else {
-                        sameScore = false;
                     }
+                    sameScore = false;
                 }
 
                 ranks.add(i + 1.0 + (mutantsWithSameScore / 2));

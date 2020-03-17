@@ -96,6 +96,11 @@ public class Study {
                 process.waitFor();
                 reader.close();
 
+                if (process.exitValue() != 0) {
+                    // Tests fail in this specific version of the program
+                    continue;   // just skip to the next bug report
+                }
+
                 // Parse PITest mutants
                 List<Mutant> mutants = getMutantsWithMutantType(cmd.hasOption("mutants") ?
                                 cmd.getOptionValue("mutants") :
