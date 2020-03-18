@@ -14,8 +14,10 @@ import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +90,10 @@ public final class CoverageRunner {
             }
             // Set timeout automatically based on the original test runtime, if none was set
             if (!config.hasParameter("timeout")) {
+                // Technically we should also read from the error stream...
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                while ((reader.readLine()) != null) {
+                }  // read output from buffer, otherwise buffer might get full
                 process.waitFor();
                 final long end = System.currentTimeMillis();
                 config.set("timeout", String.valueOf((int) Math.ceil((end - start) * 1.5 / 1000f) + 1));
