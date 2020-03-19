@@ -4,6 +4,7 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -56,42 +57,48 @@ public class IssueRetriever {
 
             // (2) Filter out all the bug reports, i.e. issues that have been closed in a commit or pull request
             for (int i = 0; i < issues.length(); i++) {
-                JSONObject issueJSON = issues.getJSONObject(i);
-                Issue issue = new Issue(issueJSON.getInt("number"));
+                try {
+                    JSONObject issueJSON = issues.getJSONObject(i);
+                    Issue issue = new Issue(issueJSON.getInt("number"));
 
-                // Pull requests
-                if (issueJSON.has("pull_request")) {
-                    final URL pullUrl = new URL(issueJSON.getJSONObject("pull_request").getString("url"));
-                    response = RequestSender.sendGetRequest(pullUrl);
-                    final JSONObject pull = new JSONObject(response);
+                    // Pull requests
+                    if (issueJSON.has("pull_request")) {
+                        final URL pullUrl = new URL(issueJSON.getJSONObject("pull_request").getString("url"));
+                        response = RequestSender.sendGetRequest(pullUrl);
+                        final JSONObject pull = new JSONObject(response);
 
-                    if (pull.getBoolean("merged")) {    // merged into master branch
-                        issue.commitBeforeFix = pull.getJSONObject("base").getString("sha");
-                        issue.fixedLines = getChangedLines(repo, walk, diffFormatter, issue.commitBeforeFix, pull.getString("merge_commit_sha"));
-                        closedBugReports.add(issue);
-                        continue;
-                    }
-                }
-
-                // Events: closed commits
-                response = RequestSender.sendGetRequest(new URL(issueJSON.getString("events_url")));
-                JSONArray events = new JSONArray(response);
-                for (int e = 0; e < events.length(); e++) {
-                    JSONObject event = events.getJSONObject(e);
-                    // Closed issue in commit (i.e. fixed)
-                    if (event.getString("event").equals("closed") && !event.isNull("commit_id")) {
-                        final URL commitUrl = new URL(event.getString("commit_url"));
-                        response = RequestSender.sendGetRequest(commitUrl);
-                        final JSONObject commit = new JSONObject(response);
-                        final JSONArray parents = commit.getJSONArray("parents");
-                        // Avoid multiple-way merge commits => more complex and takes more time...
-                        if (parents.length() == 1) {
-                            issue.commitBeforeFix = parents.getJSONObject(0).getString("sha");
-                            issue.fixedLines = getChangedLines(repo, walk, diffFormatter, issue.commitBeforeFix, commit.getString("sha"));
+                        if (pull.getBoolean("merged")) {    // merged into master branch
+                            issue.commitBeforeFix = pull.getJSONObject("base").getString("sha");
+                            issue.fixedLines = getChangedLines(repo, walk, diffFormatter, issue.commitBeforeFix, pull.getString("merge_commit_sha"));
                             closedBugReports.add(issue);
                             continue;
                         }
                     }
+
+                    // Events: closed commits
+                    response = RequestSender.sendGetRequest(new URL(issueJSON.getString("events_url")));
+                    JSONArray events = new JSONArray(response);
+                    for (int e = 0; e < events.length(); e++) {
+                        JSONObject event = events.getJSONObject(e);
+                        // Closed issue in commit (i.e. fixed)
+                        if (event.getString("event").equals("closed") && !event.isNull("commit_id")) {
+                            final URL commitUrl = new URL(event.getString("commit_url"));
+                            response = RequestSender.sendGetRequest(commitUrl);
+                            final JSONObject commit = new JSONObject(response);
+                            final JSONArray parents = commit.getJSONArray("parents");
+                            // Avoid multiple-way merge commits => more complex and takes more time...
+                            if (parents.length() == 1) {
+                                issue.commitBeforeFix = parents.getJSONObject(0).getString("sha");
+                                issue.fixedLines = getChangedLines(repo, walk, diffFormatter, issue.commitBeforeFix, commit.getString("sha"));
+                                closedBugReports.add(issue);
+                                continue;
+                            }
+                        }
+                    }
+
+                } catch (MissingObjectException e) {
+                    // It is possible for issues to reference commits from other branches and even repo's
+                    continue;
                 }
             }
 
