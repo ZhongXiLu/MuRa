@@ -74,7 +74,7 @@ public class RankingEvaluator {
 
         // Take average of the coeff values as "optimal" weight
         for (Map.Entry<String, Double> coeff : coeffWeights.entrySet()) {
-            final double optimalCoeffWeight = coeff.getValue() / coeffWeights.size();
+            final double optimalCoeffWeight = coeff.getValue() / fixedMutants.size();
             printWriter.println("\t" + coeff.getKey() + ": " + optimalCoeffWeight);
             coeffWeights.put(coeff.getKey(), optimalCoeffWeight);
         }
