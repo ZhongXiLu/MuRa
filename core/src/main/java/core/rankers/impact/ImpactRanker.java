@@ -88,7 +88,7 @@ public class ImpactRanker {
         Files.move(Paths.get(currentTempFile), Paths.get(currentTempFile.replace(".tmp", ".class")), StandardCopyOption.REPLACE_EXISTING);
 
         // First iteration to get the highest impact score
-        int highestImpactScore = 0;
+        int highestImpactScore = 1;
         for (Integer impactScore : mutantImpactScores) {
             if (impactScore > highestImpactScore) {
                 highestImpactScore = impactScore;

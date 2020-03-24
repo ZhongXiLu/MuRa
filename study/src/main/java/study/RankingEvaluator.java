@@ -68,13 +68,13 @@ public class RankingEvaluator {
         for (Mutant mutant : fixedMutants) {
             List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
             for (Coefficient coeff : coeffs) {
-                coeffWeights.put(coeff.getRanker(), coeff.getValue() + coeffWeights.getOrDefault(coeff.getRanker(), 0.0));
+                coeffWeights.put(coeff.getRanker(), coeff.getValue() + (double) coeffWeights.getOrDefault(coeff.getRanker(), 0.0));
             }
         }
 
         // Take average of the coeff values as "optimal" weight
         for (Map.Entry<String, Double> coeff : coeffWeights.entrySet()) {
-            final double optimalCoeffWeight = coeff.getValue() / fixedMutants.size();
+            final double optimalCoeffWeight = coeff.getValue() / (double) fixedMutants.size();
             printWriter.println("\t" + coeff.getKey() + ": " + optimalCoeffWeight);
             coeffWeights.put(coeff.getKey(), optimalCoeffWeight);
         }
@@ -102,19 +102,19 @@ public class RankingEvaluator {
 
                 // Calculate how many other mutants have same score/rank
                 int mutantsWithSameScore = 0;
-                boolean sameScore = true;
-                for (int j = i - 1; sameScore; j--) {   // mutants placed lower than the mutant
+                int mutantsWithHigherScore = i; // at i-th position = i mutants with higher score
+                for (int j = i - 1; true; j--) {   // mutants placed lower than the mutant
                     if (j >= 0) {
                         final double otherScore = getScore(coeffWeights, mutants.get(j));
                         if (Double.compare(score, otherScore) == 0) {
                             mutantsWithSameScore++;
+                            mutantsWithHigherScore--;
                             continue;
                         }
                     }
-                    sameScore = false;
+                    break;
                 }
-                sameScore = true;
-                for (int j = i + 1; sameScore; j++) {   // mutants placed higher than the mutant
+                for (int j = i + 1; true; j++) {   // mutants placed higher than the mutant
                     if (j < mutants.size()) {
                         final double otherScore = getScore(coeffWeights, mutants.get(j));
                         if (Double.compare(score, otherScore) == 0) {
@@ -122,10 +122,10 @@ public class RankingEvaluator {
                             continue;
                         }
                     }
-                    sameScore = false;
+                    break;
                 }
 
-                ranks.add(i + 1.0 + (mutantsWithSameScore / 2));
+                ranks.add(((double) mutantsWithHigherScore + (mutantsWithSameScore / 2.0)));
                 printWriter.println("Mutant @" + (i + 1) + ": " + (score / highestScore));
             }
         }
@@ -147,7 +147,7 @@ public class RankingEvaluator {
         List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
         double score = 0.0;
         for (Coefficient coeff : coeffs) {
-            score += coeffWeights.get(coeff.getRanker()) * coeff.getValue();
+            score += (coeffWeights.get(coeff.getRanker()) * (double) coeff.getValue());
         }
         return score;
     }

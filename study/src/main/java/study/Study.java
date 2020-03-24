@@ -1,7 +1,12 @@
 package study;
 
+import core.Coefficient;
 import core.MuRa;
 import core.RankedMutant;
+import core.rankers.complexity.ComplexityRanker;
+import core.rankers.history.HistoryRanker;
+import core.rankers.impact.ImpactRanker;
+import core.rankers.usage.UsageRanker;
 import lumutator.Configuration;
 import lumutator.Mutant;
 import org.apache.commons.cli.*;
@@ -71,7 +76,10 @@ public class Study {
                     cmd.hasOption("label") ? cmd.getOptionValue("label") : "bug"
             );
 
+            int i = 1;
             for (Issue bugReport : bugReports) {
+                System.out.println("Bug report " + i + "/" + bugReports.size() + ": " + bugReport.id);
+
                 // Switch to commit before the bug report was fixed
                 Process process = Runtime.getRuntime().exec(
                         "git checkout -f " + bugReport.commitBeforeFix, null, new File(config.get("projectDir"))
@@ -98,6 +106,8 @@ public class Study {
 
                 if (process.exitValue() != 0) {
                     // Tests fail in this specific version of the program
+                    System.out.println("Tests failed for issue " + bugReport.id);
+                    i++;
                     continue;   // just skip to the next bug report
                 }
 
@@ -108,16 +118,47 @@ public class Study {
                         true, RankedMutant.class
                 );
 
-                if (RankingEvaluator.getMutantsRelatedToBugReport(mutants, bugReport).isEmpty()) {
+                List<Mutant> bugRelatedMutants = RankingEvaluator.getMutantsRelatedToBugReport(mutants, bugReport);
+                if (bugRelatedMutants.isEmpty()) {
                     // No mutants are related to the current bug report, so we cannot score the ranking
+                    System.out.println("No bug related mutants for issue " + bugReport.id);
+                    i++;
                     continue;   // just skip to the next bug report
                 }
 
-                // Rank mutants
-                MuRa.rankMutants(mutants);
+                // Small optimization:
+                // If all the bug related mutants have no impact, skip calculating the impact for
+                // all the other mutants, since the weight for the impact eventually will be 0
+                ImpactRanker.rank(bugRelatedMutants, config.get("classFiles"));
+                boolean hasImpact = false;
+
+                // Check if any of the mutants have impact
+                for (Mutant mutant : bugRelatedMutants) {
+                    List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
+                    for (Coefficient coeff : coeffs) {
+                        if (coeff.getRanker().equals("Impact")) {
+                            if (Double.compare(coeff.getValue(), 0.0) != 0) {
+                                hasImpact = true;
+                            }
+                        }
+                    }
+                    ((RankedMutant) mutant).clearCoefficients();
+                }
+
+                if (!hasImpact) {
+                    // Rank mutants without impact
+                    ComplexityRanker.rank(mutants, config.get("classFiles"));
+                    UsageRanker.rank(mutants, config.get("classFiles"));
+                    HistoryRanker.rank(mutants);
+                } else {
+                    // Otherwise, just call MuRa
+                    MuRa.rankMutants(mutants);
+                }
 
                 // Find optimal configuration (i.e. weight for each ranking method) and evaluate ranking
                 RankingEvaluator.evaluateRanking(mutants, bugReport, config.get("projectDir") + "/MuRa.log");
+
+                i++;
             }
 
             // Go back to current commit

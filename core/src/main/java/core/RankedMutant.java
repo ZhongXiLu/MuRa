@@ -68,6 +68,13 @@ public class RankedMutant extends Mutant {
     }
 
     /**
+     * Remove all the existing coefficients.
+     */
+    public void clearCoefficients() {
+        rankCoefficients.clear();
+    }
+
+    /**
      * Get all the rank coefficients.
      *
      * @return All the rank coefficients.

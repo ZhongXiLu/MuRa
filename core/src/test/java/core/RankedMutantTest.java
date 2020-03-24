@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link RankedMutant}.
@@ -62,4 +62,17 @@ public class RankedMutantTest {
         mutant.addRankCoefficient(new Coefficient("Method A", 0.123));
         assertEquals(0.374, mutant.getRawScore(), 0.001);
     }
+
+    /**
+     * Test the {@link RankedMutant#clearCoefficients()} method.
+     */
+    @Test
+    public void testClearCoefficients() {
+        assertTrue(mutant.getRankCoefficients().isEmpty());
+        mutant.addRankCoefficient(new Coefficient("Method A", 1.0));
+        assertFalse(mutant.getRankCoefficients().isEmpty());
+        mutant.clearCoefficients();
+        assertTrue(mutant.getRankCoefficients().isEmpty());
+    }
+
 }

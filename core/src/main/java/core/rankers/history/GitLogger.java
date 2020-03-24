@@ -28,8 +28,10 @@ public class GitLogger {
         Configuration config = Configuration.getInstance();
         commitHistory = new HashMap<>();
         try {
-            Process process = Runtime.getRuntime().exec("git log --pretty=format:%H", null, new File(config.get("projectDir")));
-            process.waitFor();
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "log", "--pretty=format:%H");
+            processBuilder.redirectErrorStream(true);
+            processBuilder.directory(new File(config.get("projectDir")));
+            Process process = processBuilder.start();
 
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
@@ -40,6 +42,7 @@ public class GitLogger {
                 commitHistory.put(line, recent);
                 recent++;   // go to next commit
             }
+            process.waitFor();
             stdInput.close();
 
         } catch (InterruptedException e) {
@@ -66,13 +69,18 @@ public class GitLogger {
         Configuration config = Configuration.getInstance();
 
         // Execute the `git log -L` command, which traces the evolution of a line
-        final String logCommand = "git log --follow -L " + lineNr + ",+1:" + file + " -- " + file;
         int changes = -1;     // don't count the commit that added the line
         int recent = -1;    // how recent the commit is (0 = most recent)
 
         try {
-            Process process = Runtime.getRuntime().exec(logCommand, null, new File(config.get("projectDir")));
-            process.waitFor();
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                    "git", "log", "--follow",
+                    "-L", lineNr + ",+1:" + file, "--", file
+            );
+
+            processBuilder.redirectErrorStream(true);
+            processBuilder.directory(new File(config.get("projectDir")));
+            Process process = processBuilder.start();
 
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
@@ -84,6 +92,7 @@ public class GitLogger {
                     changes++;
                 }
             }
+            process.waitFor();
             stdInput.close();
 
             // TODO: temporary fix: sometimes the log command does not return anything...
