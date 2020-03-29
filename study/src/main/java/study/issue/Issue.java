@@ -19,6 +19,11 @@ public class Issue {
     public String commitBeforeFix;
 
     /**
+     * The commit hash that fixes the bug.
+     */
+    public String commitFix;
+
+    /**
      * Map containing the lines that were fixed.
      * Filename -> set of line numbers.
      */

@@ -54,7 +54,9 @@ public class RankingEvaluator {
     public static void evaluateRanking(List<Mutant> mutants, Issue bugReport, String logFile) throws IOException {
         FileWriter fileWriter = new FileWriter(logFile, true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.println("\nIssue " + bugReport.id + " (commit " + bugReport.commitBeforeFix + ")");
+        printWriter.println("\nIssue " + bugReport.id);
+        printWriter.println("\nCommit fix: " + bugReport.commitFix);
+        printWriter.println("\nCommit before fix: " + bugReport.commitBeforeFix);
 
         // (1) Find the relevant mutants, i.e. the mutants that are on a line that is fixed in a future bug
         List<Mutant> fixedMutants = getMutantsRelatedToBugReport(mutants, bugReport);

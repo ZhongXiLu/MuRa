@@ -69,6 +69,7 @@ public class IssueRetriever {
 
                         if (pull.getBoolean("merged")) {    // merged into master branch
                             issue.commitBeforeFix = pull.getJSONObject("base").getString("sha");
+                            issue.commitFix = pull.getString("merge_commit_sha");
                             issue.fixedLines = getChangedLines(repo, walk, diffFormatter, issue.commitBeforeFix, pull.getString("merge_commit_sha"));
                             closedBugReports.add(issue);
                             continue;
@@ -89,6 +90,7 @@ public class IssueRetriever {
                             // Avoid multiple-way merge commits => more complex and takes more time...
                             if (parents.length() == 1) {
                                 issue.commitBeforeFix = parents.getJSONObject(0).getString("sha");
+                                issue.commitFix = commit.getString("sha");
                                 issue.fixedLines = getChangedLines(repo, walk, diffFormatter, issue.commitBeforeFix, commit.getString("sha"));
                                 closedBugReports.add(issue);
                                 continue;
