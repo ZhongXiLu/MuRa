@@ -86,6 +86,9 @@ public class Study {
                 );
                 process.waitFor();
 
+                // Reset config parameters
+                Configuration.getInstance().initialize(cmd.getOptionValue("config"));
+
                 // Setup the configuration
                 ConfigurationSetup.addPITest(new File(config.get("projectDir") + "/pom.xml"));
                 ConfigurationSetup.addClassPath(config);
