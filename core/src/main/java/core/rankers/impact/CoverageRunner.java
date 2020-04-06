@@ -80,7 +80,7 @@ public final class CoverageRunner {
                 + config.get("testRunner") + " " + allTestNames;
 
         try {
-            Process process = Runtime.getRuntime().exec(testCommand, null, new File("pmd-core"));
+            Process process = Runtime.getRuntime().exec(testCommand);
             if (config.hasParameter("timeout")) {
                 readFromBuffer(new BufferedReader(new InputStreamReader(process.getInputStream())));
                 readFromBuffer(new BufferedReader(new InputStreamReader(process.getErrorStream())));
