@@ -2,6 +2,7 @@ package study;
 
 import core.Coefficient;
 import core.MuRa;
+import core.MutantExporter;
 import core.RankedMutant;
 import core.rankers.complexity.ComplexityRanker;
 import core.rankers.history.HistoryRanker;
@@ -67,8 +68,9 @@ public class Study {
             Configuration.getInstance().initialize(cmd.getOptionValue("config"));
             Configuration config = Configuration.getInstance();
 
-            // Create log file
+            // Create log file and directory for exported mutants
             FileUtils.touch(new File(config.get("projectDir") + "/MuRa.log"));
+            new File("export").mkdir();
 
             // Get all closed bug reports
             final List<Issue> bugReports = IssueRetriever.getAllClosedBugReports(
@@ -157,6 +159,8 @@ public class Study {
                     // Otherwise, just call MuRa
                     MuRa.rankMutants(mutants);
                 }
+
+                MutantExporter.exportMutantsToCSV(mutants, "export/" + bugReport.id + ".csv");
 
                 // Find optimal configuration (i.e. weight for each ranking method) and evaluate ranking
                 RankingEvaluator.evaluateRanking(mutants, bugReport, config.get("projectDir") + "/MuRa.log");

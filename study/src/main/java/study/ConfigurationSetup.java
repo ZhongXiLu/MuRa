@@ -3,6 +3,7 @@ package study;
 import lumutator.Configuration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -58,6 +59,25 @@ public class ConfigurationSetup {
 
         Node pitestNode = doc.importNode(doc2.getDocumentElement(), true);
         node.appendChild(pitestNode);
+
+        // Below are some hacks that might be needed for older versions
+        //Node surefire = (Node) xPath.compile("/project/properties/surefire.version").evaluate(doc, XPathConstants.NODE);
+        //surefire.setTextContent("2.21.0");
+        //Node java = (Node) xPath.compile("/project/properties/java.version").evaluate(doc, XPathConstants.NODE);
+        //java.setTextContent("1.8");
+        //Node jacoco = (Node) xPath.compile("/project/properties/jacoco.version").evaluate(doc, XPathConstants.NODE);
+        //jacoco.setTextContent("0.8.4");
+        //NodeList sources = (NodeList) xPath.compile(".//source").evaluate(doc, XPathConstants.NODESET);
+        //for (int i = 0; i < sources.getLength(); i++) {
+        //    sources.item(i).setTextContent("1.6");
+        //}
+        //NodeList targets = (NodeList) xPath.compile(".//target").evaluate(doc, XPathConstants.NODESET);
+        //for (int i = 0; i < targets.getLength(); i++) {
+        //    targets.item(i).setTextContent("1.6");
+        //}
+
+        //Node junit = (Node) xPath.compile(".//groupId[text()='junit']").evaluate(doc, XPathConstants.NODE);
+        //junit.getNextSibling().getNextSibling().getNextSibling().getNextSibling().setTextContent("4.6");
 
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         Result output = new StreamResult(pom);
