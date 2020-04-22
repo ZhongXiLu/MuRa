@@ -131,35 +131,10 @@ public class Study {
                     continue;   // just skip to the next bug report
                 }
 
-                // Small optimization:
-                // If all the bug related mutants have no impact, skip calculating the impact for
-                // all the other mutants, since the weight for the impact eventually will be 0
-                ImpactRanker.rank(bugRelatedMutants, config.get("classFiles"));
-                boolean hasImpact = false;
+                // Call MuRa
+                MuRa.rankMutants(mutants);
 
-                // Check if any of the mutants have impact
-                for (Mutant mutant : bugRelatedMutants) {
-                    List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
-                    for (Coefficient coeff : coeffs) {
-                        if (coeff.getRanker().equals("Impact")) {
-                            if (Double.compare(coeff.getValue(), 0.0) != 0) {
-                                hasImpact = true;
-                            }
-                        }
-                    }
-                    ((RankedMutant) mutant).clearCoefficients();
-                }
-
-                if (!hasImpact) {
-                    // Rank mutants without impact
-                    ComplexityRanker.rank(mutants, config.get("classFiles"));
-                    UsageRanker.rank(mutants, config.get("classFiles"));
-                    HistoryRanker.rank(mutants);
-                } else {
-                    // Otherwise, just call MuRa
-                    MuRa.rankMutants(mutants);
-                }
-
+                // Export mutants
                 MutantExporter.exportMutantsToCSV(mutants, "export/" + bugReport.id + ".csv");
 
                 // Find optimal configuration (i.e. weight for each ranking method) and evaluate ranking

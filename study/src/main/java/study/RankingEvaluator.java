@@ -70,8 +70,10 @@ public class RankingEvaluator {
         for (Mutant mutant : fixedMutants) {
             List<Coefficient> coeffs = ((RankedMutant) mutant).getRankCoefficients();
             for (Coefficient coeff : coeffs) {
+                printWriter.print(coeff.getValue() + ",");
                 coeffWeights.put(coeff.getRanker(), coeff.getValue() + (double) coeffWeights.getOrDefault(coeff.getRanker(), 0.0));
             }
+            printWriter.println();
         }
 
         // Take average of the coeff values as "optimal" weight
