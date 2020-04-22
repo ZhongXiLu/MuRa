@@ -136,6 +136,7 @@ public class Study {
 
                 // Export mutants
                 MutantExporter.exportMutantsToCSV(mutants, "export/" + bugReport.id + ".csv");
+                MutantExporter.exportMutantsToCSV(bugRelatedMutants, "export/" + bugReport.id + "_bug.csv");
 
                 // Find optimal configuration (i.e. weight for each ranking method) and evaluate ranking
                 RankingEvaluator.evaluateRanking(mutants, bugReport, config.get("projectDir") + "/MuRa.log");
