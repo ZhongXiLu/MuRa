@@ -28,7 +28,7 @@ public class MuRa {
         ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
         UsageRanker.rank(survivedMutants, config.get("classFiles"));
         ImpactRanker.rank(survivedMutants, config.get("classFiles"));
-        if (new File(config.get("projectDir") + File.pathSeparator + ".git").exists()) {
+        if (new File(config.get("projectDir") + File.separator + ".git").exists()) {
             HistoryRanker.rank(survivedMutants);
         }
     }
