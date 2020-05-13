@@ -7,6 +7,7 @@ import core.rankers.usage.UsageRanker;
 import lumutator.Configuration;
 import lumutator.Mutant;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,13 +23,14 @@ public class MuRa {
      * @param survivedMutants List of survived mutants that need to be ranked.
      */
     public static void rankMutants(List<Mutant> survivedMutants) throws IOException {
-        //Configuration.getInstance().initialize(configFile);
         Configuration config = Configuration.getInstance();
 
         ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
         UsageRanker.rank(survivedMutants, config.get("classFiles"));
         ImpactRanker.rank(survivedMutants, config.get("classFiles"));
-        HistoryRanker.rank(survivedMutants);
+        if (new File(config.get("projectDir") + File.separator + ".git").exists()) {
+            HistoryRanker.rank(survivedMutants);
+        }
     }
 
 }

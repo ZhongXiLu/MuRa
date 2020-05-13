@@ -49,6 +49,9 @@ public class Study {
             options.addOption(
                     new Option("l", "label", true, "The label on GitHub for an issue that identifies a bug")
             );
+            options.addOption(
+                    new Option("s", "submodule", true, "In case of multimodule, specify the submodule")
+            );
 
             CommandLineParser parser = new DefaultParser();
             HelpFormatter formatter = new HelpFormatter();
@@ -93,13 +96,25 @@ public class Study {
 
                 // Setup the configuration
                 ConfigurationSetup.addPITest(new File(config.get("projectDir") + "/pom.xml"));
-                ConfigurationSetup.addClassPath(config);
+                if (cmd.hasOption("submodule")) {
+                    ConfigurationSetup.addClassPath(config, cmd.getOptionValue("submodule"));
+                } else {
+                    ConfigurationSetup.addClassPath(config);
+                }
 
                 // Run mutation testing with PITest
-                ProcessBuilder processBuilder = new ProcessBuilder(
-                        "mvn", "clean", "test",
-                        "-Dfeatures=+EXPORT", "org.pitest:pitest-maven:mutationCoverage"
-                );
+                ProcessBuilder processBuilder = null;
+                if (cmd.hasOption("submodule")) {
+                    processBuilder = new ProcessBuilder(
+                            "mvn", "clean", "test", "-pl", cmd.getOptionValue("submodule"),
+                            "-Dfeatures=+EXPORT", "org.pitest:pitest-maven:mutationCoverage"
+                    );
+                } else {
+                    processBuilder = new ProcessBuilder(
+                            "mvn", "clean", "test",
+                            "-Dfeatures=+EXPORT", "org.pitest:pitest-maven:mutationCoverage"
+                    );
+                }
                 processBuilder.directory(new File(config.get("projectDir")));
                 processBuilder.redirectErrorStream(true);
                 process = processBuilder.start();

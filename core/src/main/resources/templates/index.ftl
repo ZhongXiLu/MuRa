@@ -40,7 +40,7 @@
                     <br><br><h5>${rank.getRanker()}</h5>
                     <input
                             style="width: 100%;"
-                            id="${rank.getRanker()}" data-slider-id='${rank.getRanker()}' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="0.001" data-slider-value="0.5"
+                            id="${rank.getRanker()}" data-slider-id='${rank.getRanker()}' type="text" data-slider-min="-1" data-slider-max="1" data-slider-step="0.001" data-slider-value="0.5"
                     />
                     </#list>
                 </div>
@@ -156,14 +156,15 @@ function updateScores() {
 
     var currentRow = null;
     var newValue = 0.0;
-    var highestScore = 0.0;
+    var maxScore = -Number.MAX_VALUE;
+    var minScore = Number.MAX_VALUE;
 
     // Calculate new scores
     table.cells().every( function() {
         // First column; keep reference to this cell
         if (this.node().classList.contains("score")) {
             currentRow = this.node();
-            newValue = 0.0
+            newValue = 0.0;
         }
         // Add new value
         <#list rankers as rank>
@@ -174,8 +175,11 @@ function updateScores() {
         // Update score
         if (currentRow != null) {
             currentRow.setAttribute("data-score", newValue);
-            if (newValue > highestScore) {
-                highestScore = newValue;
+            if (newValue > maxScore) {
+                maxScore = newValue;
+            }
+            if (newValue < minScore) {
+                minScore = newValue;
             }
         }
     } );
@@ -183,7 +187,7 @@ function updateScores() {
     // Normalize scores
     table.cells().every( function() {
         if (this.node().classList.contains("score")) {
-            this.node().textContent = (parseFloat(this.node().getAttribute("data-score")) / highestScore).toFixed(3);
+            this.node().textContent = ((parseFloat(this.node().getAttribute("data-score")) - minScore) / (maxScore - minScore)).toFixed(3);
         }
     } );
 

@@ -36,7 +36,6 @@ public class UsageRanker {
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating usage")) {
             final String methodName = mutant.getMutatedClass() + "." + mutant.getMutatedMethod() + mutant.getMutatedMethodDescr();
             final int usageCount = usageCalculator.getUsageCount(methodName);
-            // TODO: just take raw count? maybe log or sqrt the count?
             if (usageCount > highestUsage) {
                 highestUsage = usageCount;
             }
