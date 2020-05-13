@@ -2,8 +2,6 @@
 
 **Important**: to learn the optimal weights, your projects should have existing issues.
 
-The following steps will be based on [jsoup](https://github.com/jhy/jsoup).
-
 1. First build the `study-1.0.jar` executable using `mvn install`.
 2. Go to the directory of your project.
 3. Set up the [config file](https://github.com/ZhongXiLu/MuRa/blob/master/config.xml) for MuRa.
@@ -19,8 +17,8 @@ usage: MuRa
  -r,--repo <arg>        The name of the repository
  -s,--submodule <arg>   In case of multimodule, specify the submodule
 ```
-For jsoup, this is:
-```aidl
+For example, for [jsoup](https://github.com/jhy/jsoup), this is:
+```bash
 java -cp <> study.Study -c config.xml -o jhy -r jsoup
 ```
 

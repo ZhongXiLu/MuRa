@@ -1,7 +1,9 @@
 # MuRa
 [![](https://github.com/ZhongXiLu/MuRa/workflows/Maven%20CI/badge.svg)](https://github.com/ZhongXiLu/MuRa/actions?query=workflow%3A%22Maven+CI%22)
 
-*Mutant Ranker for mutation testing*
+Ranks survived mutants according to their importance.
+
+An online demo can be found [here](demo.html) based on [jsoup](https://github.com/jhy/jsoup).
 
 ## How to Install
 
@@ -18,6 +20,7 @@ make sure there's a directory `/target/pit-reports` present afterwards.
 mvn test -Dfeatures=+EXPORT org.pitest:pitest-maven:mutationCoverage
 ```
 To include PITest into your project, add the following plugin in your `pom.xml`:
+
 ```xml
 <plugin>
     <groupId>org.pitest</groupId>
