@@ -3,7 +3,6 @@ package study;
 import lumutator.Configuration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -92,10 +91,25 @@ public class ConfigurationSetup {
      * @param config The configuration to be used for MuRa.
      */
     public static void addClassPath(Configuration config) throws IOException, InterruptedException {
+        addClassPath(config, "");
+    }
+
+    /**
+     * Add the classpath of the current project version to the configuration.
+     *
+     * @param config The configuration to be used for MuRa.
+     * @param module Name of the submodule the case study will be ran on.
+     */
+    public static void addClassPath(Configuration config, String module) throws IOException, InterruptedException {
         String newClassPath = null;
 
         // Get the classpath from Maven
-        Process process = Runtime.getRuntime().exec("mvn dependency:build-classpath", null, new File(config.get("projectDir")));
+        Process process = null;
+        if (module.equals("")) {
+            process = Runtime.getRuntime().exec("mvn dependency:build-classpath", null, new File(config.get("projectDir")));
+        } else {
+            process = Runtime.getRuntime().exec("mvn dependency:build-classpath -pl " + module, null, new File(config.get("projectDir")));
+        }
         process.waitFor();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));

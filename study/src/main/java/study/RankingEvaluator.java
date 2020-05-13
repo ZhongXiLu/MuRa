@@ -33,7 +33,6 @@ public class RankingEvaluator {
         HashMap<String, Set<Integer>> fixedLines = bugReport.fixedLines;
         for (Mutant mutant : mutants) {
             final Path sourcePath = Paths.get(config.get("projectDir")).relativize(mutant.getOriginalFile().toPath());
-            // TODO: use column instead for more precision?
             Set<Integer> lines = fixedLines.getOrDefault(sourcePath.toString(), null);
             if (lines != null && lines.contains(mutant.getLineNr())) {
                 // Found a mutant on a line that was fixed in future bug fix
