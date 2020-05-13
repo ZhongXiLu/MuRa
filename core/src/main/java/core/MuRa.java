@@ -1,5 +1,7 @@
 package core;
 
+import core.rankers.ck.CKCalculator;
+import core.rankers.ck.CKRanker;
 import core.rankers.complexity.ComplexityRanker;
 import core.rankers.history.HistoryRanker;
 import core.rankers.impact.ImpactRanker;
@@ -25,12 +27,13 @@ public class MuRa {
     public static void rankMutants(List<Mutant> survivedMutants) throws IOException {
         Configuration config = Configuration.getInstance();
 
-        ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
-        UsageRanker.rank(survivedMutants, config.get("classFiles"));
-        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
-        if (new File(config.get("projectDir") + File.separator + ".git").exists()) {
-            HistoryRanker.rank(survivedMutants);
-        }
+        CKRanker.rankCK(survivedMutants, config.get("sourcePath"));
+//        ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
+//        UsageRanker.rank(survivedMutants, config.get("classFiles"));
+//        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
+//        if (new File(config.get("projectDir") + File.separator + ".git").exists()) {
+//            HistoryRanker.rank(survivedMutants);
+//        }
     }
 
 }
