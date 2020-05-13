@@ -21,20 +21,20 @@ public class CKRanker {
 
         // CBO
         int highest = 0;
-        List<Integer> scores = new ArrayList<>();
+        List<Integer> cbos = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating CBO")) {
             final String className = mutant.getMutatedClass();
             final int score = ck.getCbo(className);
             if (score > highest) {
                 highest = score;
             }
-            scores.add(score);
+            cbos.add(score);
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
             final String className = mutant.getMutatedClass();
-            final double coeff = (double) scores.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedMethod() + " has a CBO of " + ck.getCbo(className);
+            final double coeff = (double) cbos.get(i) / (double) highest;
+            final String explanation = mutant.getMutatedClass() + " has a CBO of " + ck.getCbo(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("CBO", coeff, explanation)
             );
@@ -42,20 +42,20 @@ public class CKRanker {
 
         // DIT
         highest = 0;
-        scores = new ArrayList<>();
+        List<Integer> dits = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating DIT")) {
             final String className = mutant.getMutatedClass();
             final int score = ck.getDit(className);
             if (score > highest) {
                 highest = score;
             }
-            scores.add(score);
+            dits.add(score);
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
             final String className = mutant.getMutatedClass();
-            final double coeff = (double) scores.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedMethod() + " has a DIT of " + ck.getDit(className);
+            final double coeff = (double) dits.get(i) / (double) highest;
+            final String explanation = mutant.getMutatedClass() + " has a DIT of " + ck.getDit(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("DIT", coeff, explanation)
             );
@@ -63,20 +63,20 @@ public class CKRanker {
 
         // WCM
         highest = 0;
-        scores = new ArrayList<>();
+        List<Integer> wcms = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating NOM")) {
             final String className = mutant.getMutatedClass();
             final int score = ck.getWcm(className);
             if (score > highest) {
                 highest = score;
             }
-            scores.add(score);
+            wcms.add(score);
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
             final String className = mutant.getMutatedClass();
-            final double coeff = (double) scores.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedMethod() + " has a WCM of " + ck.getWcm(className);
+            final double coeff = (double) wcms.get(i) / (double) highest;
+            final String explanation = mutant.getMutatedClass() + " has a WCM of " + ck.getWcm(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("WCM", coeff, explanation)
             );
@@ -84,22 +84,41 @@ public class CKRanker {
 
         // RFC
         highest = 0;
-        scores = new ArrayList<>();
+        List<Integer> rfcs = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating RFC")) {
             final String className = mutant.getMutatedClass();
             final int score = ck.getRfc(className);
             if (score > highest) {
                 highest = score;
             }
-            scores.add(score);
+            rfcs.add(score);
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
             final String className = mutant.getMutatedClass();
-            final double coeff = (double) scores.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedMethod() + " has a RFC of " + ck.getRfc(className);
+            final double coeff = (double) rfcs.get(i) / (double) highest;
+            final String explanation = mutant.getMutatedClass() + " has a RFC of " + ck.getRfc(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("RFC", coeff, explanation)
+            );
+        }
+
+        // Class complexity: all combined (each have equal weight)
+        double highest_ = 0.0;
+        List<Double> scores_ = new ArrayList<>();
+        for (int i = 0; i < mutants.size(); i++) {
+            final double score = ((double)(cbos.get(i) + dits.get(i) + wcms.get(i) + rfcs.get(i))) / (double) 4;
+            if (score > highest_) {
+                highest_ = score;
+            }
+            scores_.add(score);
+        }
+        for (int i = 0; i < mutants.size(); i++) {
+            final Mutant mutant = mutants.get(i);
+            final double coeff = scores_.get(i) / highest_;
+            final String explanation = mutant.getMutatedClass() + " has a class complexity of " + scores_.get(i);
+            ((RankedMutant) mutant).addRankCoefficient(
+                    new Coefficient("CC", coeff, explanation)
             );
         }
 
