@@ -1,7 +1,8 @@
 package core.rankers.ck;
 
 import com.github.mauricioaniche.ck.CK;
-import com.github.mauricioaniche.ck.CKClassResult;
+import com.github.mauricioaniche.ck.CKNumber;
+import com.github.mauricioaniche.ck.CKReport;
 
 import java.util.HashMap;
 
@@ -23,7 +24,7 @@ public class CKCalculator {
     /**
      * Weight Method Class.
      */
-    private HashMap<String, Integer> wcm;
+    private HashMap<String, Integer> wmc;
 
     /**
      * Response for a Class.
@@ -31,26 +32,19 @@ public class CKCalculator {
     private HashMap<String, Integer> rfc;
 
     /**
+     * Number of Children.
+     */
+    private HashMap<String, Integer> noc;
+
+    /**
      * Constructor.
      */
     public CKCalculator() {
         cbo = new HashMap<>();
         dit = new HashMap<>();
-        wcm = new HashMap<>();
+        wmc = new HashMap<>();
         rfc = new HashMap<>();
-    }
-
-    /**
-     * Store the results of CK.
-     *
-     * @param result The results of CK.
-     */
-    public void storeResults(CKClassResult result) {
-        final String className = result.getClassName().replace("Anonymous", "");
-        cbo.put(className, result.getCbo());
-        dit.put(className, result.getDit());
-        wcm.put(className, result.getNumberOfMethods());
-        rfc.put(className, result.getRfc());
+        noc = new HashMap<>();
     }
 
     /**
@@ -59,9 +53,17 @@ public class CKCalculator {
      * @param sourcePath Path to the directory with all the source files.
      */
     public void calculateCKMetrics(final String sourcePath) {
-        new CK(false, 0, false).calculate(sourcePath, result -> {
-            storeResults(result);
-        });
+        CKReport report = new CK().calculate(sourcePath);
+
+        for (CKNumber result : report.all()) {
+            if (result.isError()) continue;
+            final String className = result.getClassName().replace("Anonymous", "");
+            cbo.put(className, result.getCbo());
+            dit.put(className, result.getDit());
+            wmc.put(className, result.getWmc());
+            rfc.put(className, result.getRfc());
+            noc.put(className, result.getNoc());
+        }
     }
 
     public int getCbo(String className) {
@@ -72,12 +74,16 @@ public class CKCalculator {
         return dit.getOrDefault(className, 0);
     }
 
-    public int getWcm(String className) {
-        return wcm.getOrDefault(className, 0);
+    public int getWmc(String className) {
+        return wmc.getOrDefault(className, 0);
     }
 
     public int getRfc(String className) {
         return rfc.getOrDefault(className, 0);
+    }
+
+    public int getNoc(String className) {
+        return noc.getOrDefault(className, 0);
     }
 
 }

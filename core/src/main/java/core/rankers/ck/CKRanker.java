@@ -61,24 +61,24 @@ public class CKRanker {
             );
         }
 
-        // WCM
+        // WMC
         highest = 0;
-        List<Integer> wcms = new ArrayList<>();
+        List<Integer> wmcs = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating NOM")) {
             final String className = mutant.getMutatedClass();
-            final int score = ck.getWcm(className);
+            final int score = ck.getWmc(className);
             if (score > highest) {
                 highest = score;
             }
-            wcms.add(score);
+            wmcs.add(score);
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
             final String className = mutant.getMutatedClass();
-            final double coeff = (double) wcms.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedClass() + " has a WCM of " + ck.getWcm(className);
+            final double coeff = (double) wmcs.get(i) / (double) highest;
+            final String explanation = mutant.getMutatedClass() + " has a WMC of " + ck.getWmc(className);
             ((RankedMutant) mutant).addRankCoefficient(
-                    new Coefficient("WCM", coeff, explanation)
+                    new Coefficient("WMC", coeff, explanation)
             );
         }
 
@@ -103,11 +103,32 @@ public class CKRanker {
             );
         }
 
+        // NOC
+        highest = 0;
+        List<Integer> nocs = new ArrayList<>();
+        for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating NOC")) {
+            final String className = mutant.getMutatedClass();
+            final int score = ck.getNoc(className);
+            if (score > highest) {
+                highest = score;
+            }
+            nocs.add(score);
+        }
+        for (int i = 0; i < mutants.size(); i++) {
+            final Mutant mutant = mutants.get(i);
+            final String className = mutant.getMutatedClass();
+            final double coeff = (double) nocs.get(i) / (double) highest;
+            final String explanation = mutant.getMutatedClass() + " has a NOC of " + ck.getNoc(className);
+            ((RankedMutant) mutant).addRankCoefficient(
+                    new Coefficient("NOC", coeff, explanation)
+            );
+        }
+
         // Class complexity: all combined (each have equal weight)
         double highest_ = 0.0;
         List<Double> scores_ = new ArrayList<>();
         for (int i = 0; i < mutants.size(); i++) {
-            final double score = ((double)(cbos.get(i) + dits.get(i) + wcms.get(i) + rfcs.get(i))) / (double) 4;
+            final double score = ((double)(cbos.get(i) + dits.get(i) + wmcs.get(i) + rfcs.get(i) + nocs.get(i))) / (double) 5;
             if (score > highest_) {
                 highest_ = score;
             }

@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.github.mauricioaniche</groupId>
             <artifactId>ck</artifactId>
-            <version>0.5.2</version>
+            <version>0.2.1</version>    <!-- This version provides NOC -->
         </dependency>
 
         <dependency>
