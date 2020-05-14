@@ -80,6 +80,13 @@
             <version>0.8.5</version>
         </dependency>
 
+        <!-- CK Metric Suite -->
+        <dependency>
+            <groupId>com.github.mauricioaniche</groupId>
+            <artifactId>ck</artifactId>
+            <version>0.2.1</version>    <!-- This version provides NOC -->
+        </dependency>
+
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.agent</artifactId>

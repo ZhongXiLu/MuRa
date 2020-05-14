@@ -26,7 +26,7 @@ public class ReportGenerator {
      */
     public static void generateReport(final List<Mutant> mutants, final String outputDir) throws IOException {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
-        cfg.setDirectoryForTemplateLoading(new File(ReportGenerator.class.getClassLoader().getResource("templates").getFile()));
+        cfg.setClassForTemplateLoading(ReportGenerator.class, "/templates");
         cfg.setDefaultEncoding("UTF-8");
 
         Template template = cfg.getTemplate("index.ftl");

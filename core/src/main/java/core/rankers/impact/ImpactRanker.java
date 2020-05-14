@@ -22,7 +22,7 @@ public class ImpactRanker {
     /**
      * Name of the ranking method.
      */
-    final static String rankingMethod = "Impact";
+    final static String rankingMethod = "IMP";
 
     /**
      * Rank mutants based on their impact.
