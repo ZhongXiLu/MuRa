@@ -19,7 +19,7 @@ public class ComplexityRanker {
     /**
      * Name of the ranking method.
      */
-    final static String rankingMethod = "Complexity";
+    final static String rankingMethod = "CC";
 
     /**
      * Rank mutants based on their complexity.

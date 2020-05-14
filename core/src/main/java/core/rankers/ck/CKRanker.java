@@ -138,7 +138,7 @@ public class CKRanker {
             final double coeff = scores_.get(i) / highest_;
             final String explanation = mutant.getMutatedClass().split("\\$")[0] + " has a class complexity of " + scores_.get(i);
             ((RankedMutant) mutant).addRankCoefficient(
-                    new Coefficient("CC", coeff, explanation)
+                    new Coefficient("CK", coeff, explanation)
             );
         }
 

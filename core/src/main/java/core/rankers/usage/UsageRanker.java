@@ -17,7 +17,7 @@ public class UsageRanker {
     /**
      * Name of the ranking method.
      */
-    final static String rankingMethod = "Usage";
+    final static String rankingMethod = "USG";
 
     /**
      * Rank mutants based on their complexity.
