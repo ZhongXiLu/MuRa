@@ -5,7 +5,6 @@ import core.RankedMutant;
 import lumutator.Mutant;
 import me.tongfei.progressbar.ProgressBar;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  */
 public class CKRanker {
 
-    public static void rankCK(List<Mutant> mutants, final String sourcePath) throws IOException {
+    public static void rankCK(List<Mutant> mutants, final String sourcePath) {
 
         CKCalculator ck = new CKCalculator();
         ck.calculateCKMetrics(sourcePath);
@@ -23,7 +22,7 @@ public class CKRanker {
         int highest = 0;
         List<Integer> cbos = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating CBO")) {
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final int score = ck.getCbo(className);
             if (score > highest) {
                 highest = score;
@@ -32,9 +31,9 @@ public class CKRanker {
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final double coeff = (double) cbos.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedClass() + " has a CBO of " + ck.getCbo(className);
+            final String explanation = className + " has a CBO of " + ck.getCbo(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("CBO", coeff, explanation)
             );
@@ -44,7 +43,7 @@ public class CKRanker {
         highest = 0;
         List<Integer> dits = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating DIT")) {
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final int score = ck.getDit(className);
             if (score > highest) {
                 highest = score;
@@ -53,9 +52,9 @@ public class CKRanker {
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final double coeff = (double) dits.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedClass() + " has a DIT of " + ck.getDit(className);
+            final String explanation = className + " has a DIT of " + ck.getDit(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("DIT", coeff, explanation)
             );
@@ -65,7 +64,7 @@ public class CKRanker {
         highest = 0;
         List<Integer> wmcs = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating NOM")) {
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final int score = ck.getWmc(className);
             if (score > highest) {
                 highest = score;
@@ -74,9 +73,9 @@ public class CKRanker {
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final double coeff = (double) wmcs.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedClass() + " has a WMC of " + ck.getWmc(className);
+            final String explanation = className + " has a WMC of " + ck.getWmc(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("WMC", coeff, explanation)
             );
@@ -86,7 +85,7 @@ public class CKRanker {
         highest = 0;
         List<Integer> rfcs = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating RFC")) {
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final int score = ck.getRfc(className);
             if (score > highest) {
                 highest = score;
@@ -95,9 +94,9 @@ public class CKRanker {
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final double coeff = (double) rfcs.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedClass() + " has a RFC of " + ck.getRfc(className);
+            final String explanation = className + " has a RFC of " + ck.getRfc(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("RFC", coeff, explanation)
             );
@@ -107,7 +106,7 @@ public class CKRanker {
         highest = 0;
         List<Integer> nocs = new ArrayList<>();
         for (Mutant mutant : ProgressBar.wrap(mutants, "Calculating NOC")) {
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final int score = ck.getNoc(className);
             if (score > highest) {
                 highest = score;
@@ -116,9 +115,9 @@ public class CKRanker {
         }
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
-            final String className = mutant.getMutatedClass();
+            final String className = mutant.getMutatedClass().split("\\$")[0];
             final double coeff = (double) nocs.get(i) / (double) highest;
-            final String explanation = mutant.getMutatedClass() + " has a NOC of " + ck.getNoc(className);
+            final String explanation = className + " has a NOC of " + ck.getNoc(className);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("NOC", coeff, explanation)
             );
@@ -137,7 +136,7 @@ public class CKRanker {
         for (int i = 0; i < mutants.size(); i++) {
             final Mutant mutant = mutants.get(i);
             final double coeff = scores_.get(i) / highest_;
-            final String explanation = mutant.getMutatedClass() + " has a class complexity of " + scores_.get(i);
+            final String explanation = mutant.getMutatedClass().split("\\$")[0] + " has a class complexity of " + scores_.get(i);
             ((RankedMutant) mutant).addRankCoefficient(
                     new Coefficient("CC", coeff, explanation)
             );

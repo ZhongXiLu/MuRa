@@ -57,7 +57,7 @@ public class CKCalculator {
 
         for (CKNumber result : report.all()) {
             if (result.isError()) continue;
-            final String className = result.getClassName().replace("Anonymous", "");
+            final String className = result.getClassName();
             cbo.put(className, result.getCbo());
             dit.put(className, result.getDit());
             wmc.put(className, result.getWmc());
