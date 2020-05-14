@@ -1,9 +1,6 @@
 package study;
 
-import core.Coefficient;
-import core.MuRa;
-import core.MutantExporter;
-import core.RankedMutant;
+import core.*;
 import core.rankers.complexity.ComplexityRanker;
 import core.rankers.history.HistoryRanker;
 import core.rankers.impact.ImpactRanker;
@@ -148,6 +145,9 @@ public class Study {
 
                 // Call MuRa
                 MuRa.rankMutants(mutants);
+
+                // Also add the reverse for each parameter
+                ParameterReverser.reverseParameters(mutants);
 
                 // Export mutants
                 MutantExporter.exportMutantsToCSV(mutants, "export/" + bugReport.id + ".csv");
