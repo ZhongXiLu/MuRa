@@ -28,12 +28,12 @@ public class MuRa {
         Configuration config = Configuration.getInstance();
 
         CKRanker.rankCK(survivedMutants, config.get("sourcePath"));
-//        ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
-//        UsageRanker.rank(survivedMutants, config.get("classFiles"));
-//        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
-//        if (new File(config.get("projectDir") + File.separator + ".git").exists()) {
-//            HistoryRanker.rank(survivedMutants);
-//        }
+        ComplexityRanker.rank(survivedMutants, config.get("classFiles"));
+        UsageRanker.rank(survivedMutants, config.get("classFiles"));
+        ImpactRanker.rank(survivedMutants, config.get("classFiles"));
+        if (new File(config.get("projectDir") + File.separator + ".git").exists()) {
+            HistoryRanker.rank(survivedMutants);
+        }
     }
 
 }
