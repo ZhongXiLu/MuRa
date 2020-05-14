@@ -12,6 +12,7 @@ import org.jacoco.agent.AgentJar;
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IClassCoverage;
+import org.jacoco.core.analysis.IMethodCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
 
 import java.io.BufferedReader;
@@ -40,6 +41,11 @@ public final class CoverageRunner {
     private Map<String, Integer> classCoveredInstructionCounts;
 
     /**
+     * Map containing the line coverage of each class.
+     */
+    private Map<String, Double> classLineCoverages;
+
+    /**
      * String with all the tests classes separated by a space.
      */
     private String allTestNames;
@@ -57,6 +63,7 @@ public final class CoverageRunner {
     public CoverageRunner(final String classesDir) throws IOException {
         Configuration config = Configuration.getInstance();
         classCoveredInstructionCounts = new HashMap<>();
+        classLineCoverages = new HashMap<>();
         allTestNames = getAllTestNames(config.get("testDir"));
         classFiles = (List<File>) FileUtils.listFiles(new File(classesDir), new String[]{"class"}, true);
         agentJar = AgentJar.extractToTempLocation();
@@ -105,10 +112,14 @@ public final class CoverageRunner {
         return classCoveredInstructionCounts;
     }
 
+    public Map<String, Double> getClassLineCoverages() {
+        return classLineCoverages;
+    }
+
     /**
      * Get all the coverage information using the execution file and the class files.
      *
-     * @param execFile   The execution file from running all the tests.
+     * @param execFile The execution file from running all the tests.
      * @throws IOException If the execution file cannot be found.
      */
     private void analyzeCoverage(File execFile) throws IOException {
@@ -124,6 +135,9 @@ public final class CoverageRunner {
 
         for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
             classCoveredInstructionCounts.put(classCoverage.getName(), classCoverage.getInstructionCounter().getCoveredCount());
+            for (IMethodCoverage methodCoverage : classCoverage.getMethods()) {
+                classLineCoverages.put(classCoverage.getName().replace("/", ".") + "." + methodCoverage.getName(), methodCoverage.getLineCounter().getCoveredRatio());
+            }
         }
     }
 
