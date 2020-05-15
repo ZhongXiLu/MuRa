@@ -13,7 +13,6 @@ class BasicMutant:
 
 
 def print_results(results):
-    # Complexity, Usage, Impact, History
     print(results, evaluate_rankings(results))
     for bugReport in sorted([f for f in os.listdir(sys.argv[1]) if not f.__contains__("bug")]):
         print("\t", bugReport[:-4], "\t", evaluate_ranking(mutants[bugReport[:-4]], results))
@@ -25,12 +24,12 @@ def mutants_from_CSV(exportedFile):
     with open(exportedFile[:-4] + "_bug.csv") as f:
         lines = f.readlines()
 
-        parameters = [parameter for parameter in lines[0].split(',')][:-1]
+        parameters = [parameter for parameter in lines[0].split(',')]
 
         bug_related_mutants = []
         for line in lines[1:]:
             coeffs = []
-            for i, value in enumerate(line.split(",")[:-1]):
+            for i, value in enumerate(line.split(",")):
                 coeffs.append((parameters[i], float(value)))
             bug_related_mutants.append(BasicMutant(coeffs, True))
 
@@ -38,7 +37,7 @@ def mutants_from_CSV(exportedFile):
 
             for line in f2.readlines()[1:]:
                 coeffs = []
-                for i, value in enumerate(line.split(",")[:-1]):
+                for i, value in enumerate(line.split(",")):
                     coeffs.append((parameters[i], float(value)))
 
                 bug_related = False
@@ -117,25 +116,25 @@ for bugReport in [f for f in os.listdir(sys.argv[1]) if not f.__contains__("bug"
     mutants[bugReport[:-4]] = mutants_from_CSV(sys.argv[1] + "/" + bugReport)
 
 print("\nbasinhopping (Powell)")
-result = basinhopping(evaluate_rankings, [0.5, 0.5, 0.5, 0.5], minimizer_kwargs=dict(method="Powell"), T=5.0,
+result = basinhopping(evaluate_rankings, [0.5] * 13, minimizer_kwargs=dict(method="Powell"), T=5.0,
                       stepsize=10.0, interval=20)
 print_results(result.x)
 
 print("\ndual_annealing (Powell)")
 result = dual_annealing(evaluate_rankings, local_search_options=dict(method="Powell"),
-                        bounds=[(-1, 1), (-1, 1), (-1, 1), (-1, 1)])
+                        bounds=[(-1, 1)] * 13)
 print_results(result.x)
 
 print("\nbasinhopping (COBYLA)")
-result = basinhopping(evaluate_rankings, [0.5, 0.5, 0.5, 0.5], minimizer_kwargs=dict(method="COBYLA"),
+result = basinhopping(evaluate_rankings, [0.5] * 13, minimizer_kwargs=dict(method="COBYLA"),
                       T=5.0, stepsize=10.0, interval=20)
 print_results(result.x)
 
 print("\ndual_annealing (COBYLA)")
 result = dual_annealing(evaluate_rankings, local_search_options=dict(method="COBYLA"),
-                        bounds=[(-1, 1), (-1, 1), (-1, 1), (-1, 1)])
+                        bounds=[(-1, 1)] * 13)
 print_results(result.x)
 
 print("\ndifferential_evolution")
-result = differential_evolution(evaluate_rankings, bounds=[(-1, 1), (-1, 1), (-1, 1), (-1, 1)], workers=-1)
+result = differential_evolution(evaluate_rankings, bounds=[(-1, 1)] * 13, workers=1, maxiter=200)
 print_results(result.x)
