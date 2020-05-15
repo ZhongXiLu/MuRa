@@ -49,7 +49,10 @@ public class RankingEvaluator {
      * @param mutants   The list of mutants with their ranking coefficients.
      * @param bugReport The issue (i.e. bug report) on which the ranking should be evaluated on.
      * @param logFile   Path to file where the log should be written to.
+     * @deprecated Use the following Python script to evaluate and determine the optimal weights instead of this function:
+     * <a href="https://github.com/ZhongXiLu/MuRa/blob/master/study/main.py">https://github.com/ZhongXiLu/MuRa/blob/master/study/main.py/a>.
      */
+    @Deprecated
     public static void evaluateRanking(List<Mutant> mutants, Issue bugReport, String logFile) throws IOException {
         FileWriter fileWriter = new FileWriter(logFile, true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
