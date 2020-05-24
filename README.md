@@ -3,12 +3,14 @@
 
 Ranks survived mutants according to their importance.
 
-An online demo can be found [here](demo.html) based on [jsoup](https://github.com/jhy/jsoup).
+An online example of the generated report can be found [here](example.html) based on [feign](https://github.com/OpenFeign/feign).
 
 ## How to Install
 
 The project is built using Maven, so the regular Maven commands apply :)
 Use `mvn install` to install the modules.
+
+Alternatively, you can download the jar executable on [the package page](https://github.com/ZhongXiLu/MuRa/packages/222793).
 
 ## How to Use
 
@@ -44,7 +46,7 @@ To include PITest into your project, add the following plugin in your `pom.xml`:
 
 3. Now everything is ready to call MuRa (after `mvn install` the executable should be in `pitest/target/pitest-1.0.jar`):
 ```bash
-java -jar pitest-1.0.jar -c config.xml
+java -jar pitest-1.1.jar -c config.xml
 ```
 
 4. Afterwards, the report should be generated in `/index.html`.

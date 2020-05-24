@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <classFiles>pmd-core/target/classes</classFiles>
+    <classFiles>target/classes</classFiles>
     <classPath>target/classes/:target/test-classes/</classPath>
     <projectDir>.</projectDir>
     <sourcePath>src/main/java/</sourcePath>

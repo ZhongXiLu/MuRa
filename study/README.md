@@ -2,7 +2,7 @@
 
 **Important**: to learn the optimal weights, your projects should have existing issues.
 
-1. First build the `study-1.0.jar` executable using `mvn install`.
+1. First build the `study-1.1.jar` executable using `mvn install`.
 2. Go to the directory of your project.
 3. Set up the [config file](https://github.com/ZhongXiLu/MuRa/blob/master/config.xml) for MuRa.
 4. Call the executable
@@ -17,9 +17,9 @@ usage: MuRa
  -r,--repo <arg>        The name of the repository
  -s,--submodule <arg>   In case of multimodule, specify the submodule
 ```
-For example, for [jsoup](https://github.com/jhy/jsoup), this is:
+For example, for the core module of [feign](https://github.com/OpenFeign/feign), this is:
 ```bash
-java -cp <> study.Study -c config.xml -o jhy -r jsoup
+java -cp <> study.Study -c config.xml -m core/target/pit-reports/ -o OpenFeign -r feign -s core
 ```
 
 5. This will export all the mutants for each bug report to the `/export` directory.
