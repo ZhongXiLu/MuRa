@@ -89,6 +89,8 @@ public final class CoverageRunner {
         try {
             Process process = Runtime.getRuntime().exec(testCommand);
             if (config.hasParameter("timeout")) {
+                readFromBuffer(new BufferedReader(new InputStreamReader(process.getInputStream())));
+                readFromBuffer(new BufferedReader(new InputStreamReader(process.getErrorStream())));
                 if (!process.waitFor(Integer.parseInt(config.get("timeout")), TimeUnit.SECONDS)) {
                     // Mutation might cause a deadlock
                     process.destroy();
@@ -97,10 +99,8 @@ public final class CoverageRunner {
             }
             // Set timeout automatically based on the original test runtime, if none was set
             if (!config.hasParameter("timeout")) {
-                // Technically we should also read from the error stream...
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                while ((reader.readLine()) != null) {
-                }  // read output from buffer, otherwise buffer might get full
+                readFromBuffer(new BufferedReader(new InputStreamReader(process.getInputStream())));
+                readFromBuffer(new BufferedReader(new InputStreamReader(process.getErrorStream())));
                 process.waitFor();
                 final long end = System.currentTimeMillis();
                 config.set("timeout", String.valueOf((int) Math.ceil((end - start) * 1.5 / 1000f) + 1));
@@ -114,6 +114,27 @@ public final class CoverageRunner {
 
     public Map<String, Double> getClassLineCoverages() {
         return classLineCoverages;
+    }
+
+    /**
+     * Read from buffer.
+     *
+     * @param reader The buffered reader.
+     */
+    private void readFromBuffer(BufferedReader reader) {
+        final Runnable runnable = () -> {
+            try {
+                try {
+                    while ((reader.readLine()) != null) {
+                    }
+                } finally {
+                    reader.close();
+                }
+            } catch (IOException e) {
+            }
+        };
+        final Thread thread = new Thread(runnable);
+        thread.start();
     }
 
     /**
