@@ -3,7 +3,7 @@
 
 Ranks survived mutants according to their importance.
 
-An online example of the generated report can be found [here](example.html) based on [feign](https://github.com/OpenFeign/feign).
+An online example of the generated report can be found [here](https://zhongxilu.github.io/MuRa/example.html) based on [feign](https://github.com/OpenFeign/feign).
 
 ## How to Install
 
