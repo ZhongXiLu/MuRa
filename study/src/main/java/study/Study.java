@@ -147,7 +147,7 @@ public class Study {
                 MuRa.rankMutants(mutants);
 
                 // Also add the reverse for each parameter
-                ParameterReverser.reverseParameters(mutants);
+                //ParameterReverser.reverseParameters(mutants);
 
                 // Export mutants
                 MutantExporter.exportMutantsToCSV(mutants, "export/" + bugReport.id + ".csv");
