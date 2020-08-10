@@ -120,7 +120,7 @@ public class ConfigurationSetup {
                 newClassPath = line;
                 break;
             }
-            if (line.startsWith("[INFO] Dependencies classpath:")) {
+            if (line.contains("Dependencies classpath:")) {
                 foundClassPath = true;
             }
         }
