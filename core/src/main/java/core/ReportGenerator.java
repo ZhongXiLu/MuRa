@@ -21,10 +21,19 @@ public class ReportGenerator {
     /**
      * Generate a report from a list of mutants.
      *
-     * @param mutants   The list of mutants.
-     * @param outputDir The output directory where the report will be generated.
+     * @param mutants The list of mutants.
      */
-    public static void generateReport(final List<Mutant> mutants, final String outputDir) throws IOException {
+    public static void generateReport(final List<Mutant> mutants) throws IOException {
+        generateReport(mutants, "index.html");
+    }
+
+    /**
+     * Generate a report from a list of mutants.
+     *
+     * @param mutants    The list of mutants.
+     * @param outputFile Path where the output file will be generated.
+     */
+    public static void generateReport(final List<Mutant> mutants, final String outputFile) throws IOException {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
         cfg.setClassForTemplateLoading(ReportGenerator.class, "/templates");
         cfg.setDefaultEncoding("UTF-8");
@@ -38,7 +47,7 @@ public class ReportGenerator {
             templateData.put("rankers", coeffs);
         }
 
-        Writer fileWriter = new FileWriter(new File("index.html"));
+        Writer fileWriter = new FileWriter(new File(outputFile));
         try {
             template.process(templateData, fileWriter);
         } catch (TemplateException e) {

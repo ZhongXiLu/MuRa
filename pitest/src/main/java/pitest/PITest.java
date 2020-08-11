@@ -58,7 +58,7 @@ public class PITest {
             MuRa.rankMutants(mutants);
 
             // Generate report
-            ReportGenerator.generateReport(mutants, ".");
+            ReportGenerator.generateReport(mutants);
 
         } catch (Exception e) {
             System.out.println("MuRa caught an exception: " + e.getMessage());
