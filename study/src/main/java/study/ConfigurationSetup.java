@@ -103,19 +103,23 @@ public class ConfigurationSetup {
     public static void addClassPath(Configuration config, String module) throws IOException, InterruptedException {
         String newClassPath = null;
 
-        // Get the classpath from Maven
-        Process process = null;
+        ProcessBuilder processBuilder = null;
         if (module.equals("")) {
-            process = Runtime.getRuntime().exec("mvn dependency:build-classpath", null, new File(config.get("projectDir")));
+            processBuilder = new ProcessBuilder(
+                    "mvn", "dependency:build-classpath"
+            );
         } else {
-            process = Runtime.getRuntime().exec("mvn dependency:build-classpath -pl " + module, null, new File(config.get("projectDir")));
+            processBuilder = new ProcessBuilder(
+                    "mvn", "dependency:build-classpath", "-pl", module
+            );
         }
-        process.waitFor();
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
+        processBuilder.directory(new File(config.get("projectDir")));
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
         boolean foundClassPath = false;
-        while ((line = in.readLine()) != null) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
             if (foundClassPath) {
                 newClassPath = line;
                 break;
@@ -123,8 +127,9 @@ public class ConfigurationSetup {
             if (line.contains("Dependencies classpath:")) {
                 foundClassPath = true;
             }
-        }
-        in.close();
+        }  // read output from buffer, otherwise buffer might get full
+        process.waitFor();
+        reader.close();
 
         // Add the classpath to the config for MuRa
         if (foundClassPath) {
