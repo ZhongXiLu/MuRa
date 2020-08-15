@@ -7,10 +7,11 @@ An online example of the generated report can be found [here](https://zhongxilu.
 
 ## How to Install
 
-The project is built using Maven, so the regular Maven commands apply :)
-Use `mvn install` to install the modules.
+- The project is built using Maven, so the regular Maven commands apply: `mvn install` to install the modules.
 
-Alternatively, you can download the jar executable on [the package page](https://github.com/ZhongXiLu/MuRa/packages/222793).
+- Alternatively, you can download the executable jar on [the package page](https://github.com/ZhongXiLu/MuRa/packages/222793).
+
+- Finally, you can also use the web interface so you don't have to worry about setting the right values for the configuration and such: [MuRa-Web](https://github.com/ZhongXiLu/MuRa-Web). Skip the steps below if you do so. (***recommended***)
 
 ## How to Use
 
