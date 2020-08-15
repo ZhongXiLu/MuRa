@@ -6,7 +6,7 @@
 
     <groupId>com.github.mura</groupId>
     <artifactId>study</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
 
     <distributionManagement>
         <repository>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.github.mura</groupId>
             <artifactId>core</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
         </dependency>
 
         <!-- Git library -->

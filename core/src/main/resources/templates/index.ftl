@@ -40,7 +40,7 @@
                     <br><br><h5>${rank.getRanker()}</h5>
                     <input
                             style="width: 100%;"
-                            id="${rank.getRanker()}" data-slider-id='${rank.getRanker()}' type="text" data-slider-min="-1" data-slider-max="1" data-slider-step="0.001" data-slider-value="0.5"
+                            id="${rank.getRanker()}" type="text" data-slider-min="-1" data-slider-max="1" data-slider-step="0.001" data-slider-value="0.5"
                     />
                     </#list>
                 </div>
@@ -233,6 +233,9 @@ function updateScores() {
             "order": [[0, "desc"]],
             "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]]
         });
+        <#list rankers as rank>
+        $('#${rank.getRanker()}').slider("setValue", ${rank.getRanker()});
+        </#list>
         updateScores();
     });
 </script>

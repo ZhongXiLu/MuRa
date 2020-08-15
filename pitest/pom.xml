@@ -6,7 +6,7 @@
 
     <groupId>com.github.mura</groupId>
     <artifactId>pitest</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 
     <distributionManagement>
         <repository>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>com.github.mura</groupId>
             <artifactId>core</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
         </dependency>
     </dependencies>
 
